@@ -155,4 +155,37 @@ public class AssetManager {
 		return (TiledMap) asset;
 	}
 
+	/**
+	 * Dispose of an asset. This will check if it is an instance of Texture,
+	 * Sound, or TiledMap, and it will dispose of it accordingly.
+	 * 
+	 * @param key
+	 *            The assset's key.
+	 */
+	public void dispose(String key) {
+		Object asset = getAsset(key);
+		if (asset == null)
+			return;
+
+		if (asset instanceof Texture) {
+			((Texture) asset).dispose(); // Dispose as a texture
+		} else if (asset instanceof Sound) {
+			// Stop the sound and dispose of it
+			((Sound) asset).stop();
+			((Sound) asset).dispose(); 
+		} else if (asset instanceof TiledMap) {
+			((TiledMap) asset).dispose(); // Dispose as a map
+		}
+	}
+
+	/**
+	 * Dispose of all assets.
+	 */
+	public void disposeAll() {
+		// Iterate through all keys and dispose each of them.
+		for (String key : assetMap.keys()) {
+			dispose(key);
+		}
+	}
+
 }

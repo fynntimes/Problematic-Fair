@@ -22,6 +22,8 @@ public class Main extends Game {
 		// Initialize sounds
 
 		// Initialize maps
+		
+		super.setScreen(new MenuScreen()); // Set the screen to MenuScreen
 	}
 
 	/**
@@ -43,6 +45,7 @@ public class Main extends Game {
 	@Override
 	public void dispose() {
 		super.dispose(); // Dispose of the current screen.
+		AssetManager.getInstance().disposeAll(); // Dispose of all assets
 	}
 
 }
