@@ -2,6 +2,7 @@ package com.tripointgames.problematic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -49,6 +50,7 @@ public class AssetManager {
 		if (getAsset(key) != null)
 			assetMap.remove(key);
 		assetMap.put(key, value);
+		System.out.println("Registered asset " + key + ".");
 	}
 
 	/**
@@ -60,7 +62,13 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerTexture(String key, String internalPath) {
-		registerAsset(key, new Texture(Gdx.files.internal(internalPath)));
+		FileHandle handle = Gdx.files.internal(internalPath);
+		// Make sure the file exists before adding it.
+		if(!handle.exists()) {
+			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+			return;
+		}
+		registerAsset(key, new Texture(handle));
 	}
 
 	/**
@@ -72,6 +80,12 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerSound(String key, String internalPath) {
+		FileHandle handle = Gdx.files.internal(internalPath);
+		// Make sure the file exists before adding it.
+		if(!handle.exists()) {
+			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+			return;
+		}
 		registerAsset(key, Gdx.audio.newSound(Gdx.files.internal(internalPath)));
 	}
 
@@ -84,6 +98,12 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerMap(String key, String internalPath) {
+		FileHandle handle = Gdx.files.internal(internalPath);
+		// Make sure the file exists before adding it.
+		if(!handle.exists()) {
+			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+			return;
+		}
 		registerAsset(key, new TmxMapLoader().load(internalPath));
 	}
 
@@ -186,6 +206,7 @@ public class AssetManager {
 		for (String key : assetMap.keys()) {
 			dispose(key);
 		}
+		System.out.println("Disposed all assets.");
 	}
 
 }
