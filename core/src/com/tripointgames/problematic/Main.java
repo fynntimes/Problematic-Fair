@@ -3,7 +3,6 @@ package com.tripointgames.problematic;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.tripointgames.problematic.screens.GameScreen;
 
 /**
  * First Problematic class that is loaded by LibGDX, serves as the main class.
@@ -13,63 +12,32 @@ import com.tripointgames.problematic.screens.GameScreen;
  */
 public class Main extends Game {
 
-	/**
-	 * The size of the tiles, in pixels.
-	 */
-	public static final int TILE_SIZE = 32;
-
-	/**
-	 * The amount of gravity. The entity Y is multiplied by this to bring them down.
-	 */
-	public static final float GRAVITY = -0.1f;
-
-	/**
-	 * The velocity is gradually decreased by this value, in order to prevent
-	 * the player from abruptly stopping.
-	 */
-	public static final float VELOCITY_DAMPING = 0.008f;
-
-	/**
-	 * Called when the game is first loaded. Initialization code goes here.
-	 * 
-	 * @see com.badlogic.gdx.Game#create()
-	 */
 	@Override
 	public void create() {
-		// Initialize textures
-		AssetManager.getInstance().registerTexture("playerTexture",
-				"textures/player_left.png");
+		AssetManager.getInstance().registerTexture("koala", "textures/koalio.png");
+		AssetManager.getInstance().registerTexture("problematicLogo", "textures/Problematic-2.png");
+		AssetManager.getInstance().registerTexture("menuBackground", "textures/bg_castle.png");
+		AssetManager.getInstance().registerTexture("playButton", "textures/play.png");
+		AssetManager.getInstance().registerTexture("optionsButton", "textures/options.png");
+		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
+		AssetManager.getInstance().registerMap("level1", "maps/level1.tmx");
 
-		// Initialize sounds
-
-		// Initialize maps
-		AssetManager.getInstance().registerMap("testLevel",
-				"maps/level0.tmx");
-
-		super.setScreen(new GameScreen()); // Set the screen to MenuScreen
+		this.setScreen(new MenuScreen(this));
 	}
 
-	/**
-	 * Render the current screen to the display.
-	 * 
-	 * @see com.badlogic.gdx.Game#render()
-	 */
 	@Override
 	public void render() {
-		// Clear the screen of colors from last frame.
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-		super.render(); // Render the current screen.
+		// Clear the screen to a blue color
+		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		// Render the current screen
+		super.render();
 	}
 
-	/**
-	 * Dispose of all resources and screens.
-	 * 
-	 * @see com.badlogic.gdx.Game#dispose()
-	 */
 	@Override
 	public void dispose() {
-		super.dispose(); // Dispose of the current screen.
-		AssetManager.getInstance().disposeAll(); // Dispose of all assets
+		// Dispose of all assets on exit
+		AssetManager.getInstance().disposeAll();
 	}
 
 }

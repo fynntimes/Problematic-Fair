@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Singleton class that stores all game assets, such as textures, maps, and
- * sounds.
+ * sounds. The assets are all
  * 
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */
@@ -50,7 +50,6 @@ public class AssetManager {
 		if (getAsset(key) != null)
 			assetMap.remove(key);
 		assetMap.put(key, value);
-		System.out.println("Registered asset " + key + ".");
 	}
 
 	/**
@@ -64,8 +63,10 @@ public class AssetManager {
 	public void registerTexture(String key, String internalPath) {
 		FileHandle handle = Gdx.files.internal(internalPath);
 		// Make sure the file exists before adding it.
-		if(!handle.exists()) {
-			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+		if (!handle.exists()) {
+			System.err.println("Asset " + key
+					+ " was not found at the internal path " + internalPath
+					+ ". It will not be registered.");
 			return;
 		}
 		registerAsset(key, new Texture(handle));
@@ -82,8 +83,10 @@ public class AssetManager {
 	public void registerSound(String key, String internalPath) {
 		FileHandle handle = Gdx.files.internal(internalPath);
 		// Make sure the file exists before adding it.
-		if(!handle.exists()) {
-			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+		if (!handle.exists()) {
+			System.err.println("Asset " + key
+					+ " was not found at the internal path " + internalPath
+					+ ". It will not be registered.");
 			return;
 		}
 		registerAsset(key, Gdx.audio.newSound(Gdx.files.internal(internalPath)));
@@ -100,8 +103,10 @@ public class AssetManager {
 	public void registerMap(String key, String internalPath) {
 		FileHandle handle = Gdx.files.internal(internalPath);
 		// Make sure the file exists before adding it.
-		if(!handle.exists()) {
-			System.err.println("Asset " + key + " was not found at the internal path " + internalPath + ". It will not be registered.");
+		if (!handle.exists()) {
+			System.err.println("Asset " + key
+					+ " was not found at the internal path " + internalPath
+					+ ". It will not be registered.");
 			return;
 		}
 		registerAsset(key, new TmxMapLoader().load(internalPath));
@@ -180,7 +185,7 @@ public class AssetManager {
 	 * Sound, or TiledMap, and it will dispose of it accordingly.
 	 * 
 	 * @param key
-	 *            The assset's key.
+	 *            The asset's key.
 	 */
 	public void dispose(String key) {
 		Object asset = getAsset(key);
@@ -192,7 +197,7 @@ public class AssetManager {
 		} else if (asset instanceof Sound) {
 			// Stop the sound and dispose of it
 			((Sound) asset).stop();
-			((Sound) asset).dispose(); 
+			((Sound) asset).dispose();
 		} else if (asset instanceof TiledMap) {
 			((TiledMap) asset).dispose(); // Dispose as a map
 		}
@@ -206,7 +211,6 @@ public class AssetManager {
 		for (String key : assetMap.keys()) {
 			dispose(key);
 		}
-		System.out.println("Disposed all assets.");
 	}
 
 }
