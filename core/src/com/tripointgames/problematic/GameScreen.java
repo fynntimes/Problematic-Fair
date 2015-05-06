@@ -5,6 +5,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
 /**
+ * The actual GameScreen, where all the gameplay is handled.
+ * 
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */
 public class GameScreen implements Screen {
@@ -19,6 +21,13 @@ public class GameScreen implements Screen {
 	private OrthographicCamera camera;
 	private Level level;
 
+	// Get the level access key from the LevelScreen (since LevelScreen is the
+	// screen that switches to GameScreen and supplies it with the level asset
+	// key of the level the user selected).
+	public GameScreen(Level level) {
+		this.level = level;
+	}
+
 	@Override
 	public void show() {
 		// Create the player entity.
@@ -29,9 +38,8 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, 10, 5);
 		camera.update();
 
-		// Create the level
-		level = new Level(AssetManager.getInstance().getMap("level1"), camera,
-				player);
+		// Create the level from the levelAssetKey.
+		level.prepare(camera, player);
 	}
 
 	@Override

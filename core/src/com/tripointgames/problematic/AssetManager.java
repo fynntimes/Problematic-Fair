@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Singleton class that stores all game assets, such as textures, maps, and
- * sounds. The assets are all
+ * sounds. All assets are loaded before the MenuScreen is shown.
  * 
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */

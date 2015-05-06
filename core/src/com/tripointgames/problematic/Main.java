@@ -12,15 +12,25 @@ import com.badlogic.gdx.graphics.GL20;
  */
 public class Main extends Game {
 
+	public LevelManager levelManager;
+
 	@Override
 	public void create() {
-		AssetManager.getInstance().registerTexture("koala", "textures/koalio.png");
-		AssetManager.getInstance().registerTexture("problematicLogo", "textures/Problematic-2.png");
-		AssetManager.getInstance().registerTexture("menuBackground", "textures/bg_castle.png");
-		AssetManager.getInstance().registerTexture("playButton", "textures/play.png");
-		AssetManager.getInstance().registerTexture("optionsButton", "textures/options.png");
-		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
-		AssetManager.getInstance().registerMap("level1", "maps/level0.tmx");
+		AssetManager.getInstance().registerTexture("koala",
+				"textures/koalio.png");
+		AssetManager.getInstance().registerTexture("problematicLogo",
+				"textures/Problematic-2.png");
+		AssetManager.getInstance().registerTexture("menuBackground",
+				"textures/bg_castle.png");
+		AssetManager.getInstance().registerTexture("playButton",
+				"textures/play.png");
+		AssetManager.getInstance().registerTexture("optionsButton",
+				"textures/options.png");
+		AssetManager.getInstance().registerTexture("helpButton",
+				"textures/help.png");
+
+		levelManager = new LevelManager();
+		levelManager.loadLevels();
 
 		this.setScreen(new MenuScreen(this));
 	}
