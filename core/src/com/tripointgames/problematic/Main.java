@@ -20,7 +20,7 @@ public class Main extends Game {
 		AssetManager.getInstance().registerTexture("playButton", "textures/play.png");
 		AssetManager.getInstance().registerTexture("optionsButton", "textures/options.png");
 		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
-		AssetManager.getInstance().registerMap("level1", "maps/level1.tmx");
+		AssetManager.getInstance().registerMap("level1", "maps/level0.tmx");
 
 		this.setScreen(new MenuScreen(this));
 	}

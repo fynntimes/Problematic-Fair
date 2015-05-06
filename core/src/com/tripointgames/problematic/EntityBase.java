@@ -27,8 +27,8 @@ public abstract class EntityBase {
 
 	public Vector2 position = new Vector2();
 	public Vector2 velocity = new Vector2();
-	protected float maxVelocity = 10f;
-	protected float jumpVelocity = 40f;
+	protected float maxVelocity = 5f;
+	protected float jumpVelocity = 20f;
 	protected float movementDamper = 0.87f;
 
 	protected EntityState state = EntityState.Standing;
@@ -212,7 +212,7 @@ public abstract class EntityBase {
 	}
 
 	public void dispose() {
-
+		this.spritesheet.dispose();
 	}
 
 }
