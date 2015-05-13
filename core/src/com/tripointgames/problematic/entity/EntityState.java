@@ -1,4 +1,4 @@
-package com.tripointgames.problematic;
+package com.tripointgames.problematic.entity;
 
 /**
  * The state of the entity. This determines the texture of the entity, and

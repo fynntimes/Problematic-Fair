@@ -2,7 +2,9 @@ package com.tripointgames.problematic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -10,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.tripointgames.problematic.level.Level;
 
 /**
  * The main menu for the game.
@@ -30,20 +32,20 @@ public class MenuScreen implements Screen {
 	public void show() {
 		stage = new Stage();
 
-		// Initialize the table with a background
+		// This table holds and positions all buttons on the menu.
 		Table table = new Table();
-		table.setBackground(assetToTextureRegion("menuBackground"));
+		table.setBackground(AssetManager.getInstance()
+				.convertTextureToDrawable("menuBackground"));
 		table.setFillParent(true);
 
-		// Add the Problematic logo
-		Image problematicLogo = new Image(
-				assetToTextureRegion("problematicLogo"));
+		Image problematicLogo = new Image(AssetManager.getInstance()
+				.convertTextureToDrawable("problematicLogo"));
 		table.add(problematicLogo).colspan(3).align(Align.center).row();
 
-		ImageButton optionsButton = new ImageButton(
-				assetToTextureRegion("optionsButton"));
+		ImageButton optionsButton = new ImageButton(AssetManager.getInstance()
+				.convertTextureToDrawable("optionsButton"));
 
-		// Add a listener to the options button, then add it.
+		// Listener is fired when the button is pressed.
 		optionsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -53,23 +55,31 @@ public class MenuScreen implements Screen {
 
 		table.add(optionsButton);
 
-		ImageButton playButton = new ImageButton(
-				assetToTextureRegion("playButton"));
+		ImageButton playButton = new ImageButton(AssetManager.getInstance()
+				.convertTextureToDrawable("playButton"));
 
-		// Add a listener to the play button, then add it.
 		playButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mainInstance.setScreen(new LevelScreen(mainInstance));
+				if (mainInstance.levelEditor) {
+					TiledMap map = new TmxMapLoader(
+							new AbsoluteFileHandleResolver()).load(System
+							.getProperty("user.dir") + "/level.tmx");
+					AssetManager.getInstance()
+							.registerAsset("levelEditor", map);
+					mainInstance.setScreen(new GameScreen(new Level(
+							"levelEditor")));
+				} else {
+					mainInstance.setScreen(new LevelScreen(mainInstance));
+				}
 			}
 		});
 
 		table.add(playButton);
 
-		ImageButton helpButton = new ImageButton(
-				assetToTextureRegion("helpButton"));
+		ImageButton helpButton = new ImageButton(AssetManager.getInstance()
+				.convertTextureToDrawable("helpButton"));
 
-		// Add a listener to the help button, then add it.
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -83,40 +93,34 @@ public class MenuScreen implements Screen {
 		Gdx.input.setInputProcessor(stage); // Allows the stage to take in input
 	}
 
-	private TextureRegionDrawable assetToTextureRegion(String assetKey) {
-		return new TextureRegionDrawable(new TextureRegion(AssetManager
-				.getInstance().getTexture(assetKey)));
-	}
-
 	@Override
 	public void render(float delta) {
 		stage.act();
 		stage.draw();
 	}
 
+	/*
+	 * The following methods are unused, but the Screen interface requires them.
+	 */
+
 	@Override
 	public void resize(int width, int height) {
-		// Unused
 	}
 
 	@Override
 	public void pause() {
-		// Unused
 	}
 
 	@Override
 	public void resume() {
-		// Unused
 	}
 
 	@Override
 	public void hide() {
-		// Unused
 	}
 
 	@Override
 	public void dispose() {
-
 	}
 
 }

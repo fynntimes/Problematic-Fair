@@ -1,4 +1,4 @@
-package com.tripointgames.problematic;
+package com.tripointgames.problematic.entity;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
+import com.tripointgames.problematic.GameScreen;
 
 /**
  * Base class for all entities.
@@ -20,7 +21,6 @@ import com.badlogic.gdx.utils.Pool;
  */
 public abstract class EntityBase {
 
-	// Variables
 	protected Texture spritesheet;
 	protected float width, height;
 	protected Animation standing, walking, jumping;
@@ -34,7 +34,7 @@ public abstract class EntityBase {
 	protected EntityState state = EntityState.Standing;
 	protected float stateTime = 0; // Stores animation frame
 	protected boolean facingRight = true; // Flips the texture
-	protected boolean onGround = true; // True when entity is jumping
+	protected boolean onGround = true; // False when entity is jumping
 
 	// A Pool is a way of accessing objects without destroying and creating new
 	// ones each frame. This saves a lot of time per frame, since it doesn't
@@ -50,6 +50,7 @@ public abstract class EntityBase {
 			int individualHeight) {
 		this.spritesheet = spritesheet;
 
+		// Initialize the animations for this entity
 		TextureRegion[] individualTextures = TextureRegion.split(spritesheet,
 				individualWidth, individualHeight)[0];
 		standing = new Animation(0, individualTextures[0]);
@@ -67,8 +68,7 @@ public abstract class EntityBase {
 	public void update(float deltaTime, TiledMap currentMap) {
 		stateTime += deltaTime;
 
-		// Handle input
-		input();
+		handleInput();
 
 		// Apply gravity
 		velocity.add(0, GameScreen.GRAVITY);
@@ -88,7 +88,7 @@ public abstract class EntityBase {
 		// Multiply by delta to determine how far to travel in this frame.
 		velocity.scl(deltaTime);
 
-		collide(currentMap);
+		checkCollisionDetection(currentMap);
 
 		// Add the velocity to the position, and un-multiply the velocity to
 		// undo the multiplication done before collision detection.
@@ -102,10 +102,10 @@ public abstract class EntityBase {
 	}
 
 	// This can be handled by subclasses.
-	public void input() {
+	public void handleInput() {
 	}
 
-	private void collide(TiledMap currentMap) {
+	private void checkCollisionDetection(TiledMap currentMap) {
 		Rectangle entityBoundingBox = rectPool.obtain();
 		entityBoundingBox.set(position.x, position.y, width, height);
 		int startX, startY, endX, endY;
@@ -164,7 +164,7 @@ public abstract class EntityBase {
 		rectPool.free(entityBoundingBox);
 	}
 
-	// Gets all tiles from (startX, startY) to (endX, endY) in the "Collision"
+	// Gets all tiles from (startX, startY) to (endX, endY) in the "walls"
 	// layer of the passed in map.
 	private Array<Rectangle> getTiles(int startX, int startY, int endX,
 			int endY, TiledMap currentMap) {
@@ -178,7 +178,7 @@ public abstract class EntityBase {
 				Cell cell = layer.getCell(x, y);
 				if (cell != null) {
 					Rectangle rect = rectPool.obtain();
-					rect.set(x, y, 1, 1);
+					rect.set(x, y, 1, 1); // Each rect is 1x1 (See GameScreen.UNIT_SCALE)
 					tiles.add(rect);
 				}
 			}

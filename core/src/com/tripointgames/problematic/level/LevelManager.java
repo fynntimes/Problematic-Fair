@@ -1,8 +1,9 @@
-package com.tripointgames.problematic;
+package com.tripointgames.problematic.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.tripointgames.problematic.AssetManager;
 
 /**
  * Loads and manages levels.
@@ -21,19 +22,16 @@ public class LevelManager {
 		// This loads all the levels in the maps file.
 		int currentId = 0;
 		while (true) {
-			// Load the next level. If loadLevel returns false, there are no
-			// more maps. Exit the loop.
-			if (loadLevel(currentId) == false)
+			if (loadLevel(currentId) == false) // No more maps, exit the loop
 				break;
-			currentId++; // Increment currentId so that the next level can be loaded.
+			currentId++;
 		}
-		levels.get(0).levelData.unlocked = true;
-		levels.get(0).levelData.starsEarned = 3;
-		levels.get(0).save();
+		getLevel(1).levelData.setUnlocked(true);
+		getLevel(1).save();
 	}
 
 	/**
-	 * Load in a level from the maps/ directory.
+	 * Load in a level from the "/assets/maps/" directory.
 	 * 
 	 * @param id
 	 *            The ID of the level to load
@@ -41,7 +39,7 @@ public class LevelManager {
 	 */
 	private boolean loadLevel(int id) {
 		FileHandle levelHandle = Gdx.files.internal("maps/level" + id + ".tmx");
-		if (!levelHandle.exists())
+		if (!levelHandle.exists()) // Check if the level exists first
 			return false;
 		AssetManager.getInstance().registerMap("level" + id,
 				"maps/level" + id + ".tmx");

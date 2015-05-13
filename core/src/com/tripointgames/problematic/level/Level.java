@@ -1,4 +1,4 @@
-package com.tripointgames.problematic;
+package com.tripointgames.problematic.level;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.tripointgames.problematic.AssetManager;
+import com.tripointgames.problematic.GameScreen;
+import com.tripointgames.problematic.entity.EntityPlayer;
 
 /**
  * Stores map and player data for the level.
@@ -24,6 +27,7 @@ public class Level {
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
 
+	// TODO Make constructor local (after removal of level editor)
 	/**
 	 * This constructor is to be used only in the LevelManager class. GameScreen
 	 * should use the prepare method to pass in a camera and a player object.
@@ -34,7 +38,7 @@ public class Level {
 
 		this.levelData = new LevelData();
 		this.json = new Json(OutputType.minimal);
-		load();
+		loadData();
 
 		renderer = new OrthogonalTiledMapRenderer(map, GameScreen.UNIT_SCALE);
 	}
@@ -79,17 +83,19 @@ public class Level {
 		player.render(renderer.getBatch());
 	}
 
-	public void load() {
+	public void loadData() {
 		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey
 				+ ".json");
-		if(!levelHandle.exists()) save(); // Create the LevelData file.
-		this.levelData = json.fromJson(LevelData.class, levelHandle); // Load the leveldata from disk.
+		if (!levelHandle.exists())
+			save(); // Create the LevelData file.
+		
+		this.levelData = json.fromJson(LevelData.class, levelHandle);
 	}
-	
+
 	public void save() {
 		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey
 				+ ".json");
-		levelHandle.writeString(json.toJson(levelData), false); // Write the leveldata to a JSON file
+		levelHandle.writeString(json.toJson(levelData), false);
 	}
 
 	public void dispose() {

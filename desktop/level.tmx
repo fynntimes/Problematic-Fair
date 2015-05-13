@@ -3,14 +3,9 @@
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="tileset.png" width="1658" height="218"/>
  </tileset>
- <layer name="nonsolid" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJztwzENAAAIA7DpwL9Q3l0IIG3SBAAA/psKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABwWeGMAE8=
-  </data>
- </layer>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJztwzENADAIADA8oAT/5ng4eDCwtUkjAADgXTm3mnkEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+1nMOAPs=
+   eJztwzENAAAIA7B5wL9XPOyENmkCAAB3TREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPhtAcF8APg=
   </data>
  </layer>
  <objectgroup name="entities">

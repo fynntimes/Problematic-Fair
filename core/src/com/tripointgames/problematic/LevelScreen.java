@@ -4,20 +4,20 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.tripointgames.problematic.level.LevelData;
 
 /**
  * The level selection screen.
@@ -28,18 +28,17 @@ public class LevelScreen implements Screen {
 
 	/** Determines the amount of pages shown on the level screen. */
 	public static final int LEVEL_PACKS = 3;
+	private String[] packNames = { "grassyJourney-logo", "rockyRoad-logo",
+			"sandstorm-logo" };
 
 	/** The size of each level button, in pixels. */
-	public static final int BUTTON_SIZE = 150;
+	public static final int BUTTON_SIZE = 125;
 
-	Main gameInstance; // Instance of the main class
+	Main gameInstance;
 
 	private Skin skin;
 	private Stage stage;
 	private Table container;
-
-	// Holds the level pack names.
-	private String[] packNames = { "Grassy Journey", "Rocky Road", "Sandstorm" };
 
 	public LevelScreen(Main gameInstance) {
 		this.gameInstance = gameInstance;
@@ -47,53 +46,47 @@ public class LevelScreen implements Screen {
 
 	@Override
 	public void show() {
-		stage = new Stage();
+		stage = new Stage(new ScreenViewport());
 
-		// Initialize the skin used for each button. A skin is the set of colors
-		// and dimensions that is applied to each UI element.
-		skin = new Skin(Gdx.files.internal("skin/uiskin.json"),
-				new TextureAtlas("skin/uiskin.atlas"));
-		// Button style for an unlocked level (red button)
-		skin.add("top", skin.newDrawable("default-round", Color.RED),
-				Drawable.class);
-		// Button style for a locked level (grey button)
-		skin.add("locked-level", skin.newDrawable("default-round", Color.GRAY),
-				Drawable.class);
-		// Filled yellow square (star)
-		skin.add("star-filled", skin.newDrawable("white", Color.YELLOW),
-				Drawable.class);
-		// Filled grey square (unused star)
-		skin.add("star-unfilled", skin.newDrawable("white", Color.GRAY),
-				Drawable.class);
+		initializeSkin();
 
 		// Allow this stage to accept input
 		Gdx.input.setInputProcessor(stage);
 
-		// Create a table to store the buttons on.
+		// Master table that holds all level buttons and logos
 		container = new Table();
 		stage.addActor(container);
-		container.setBackground(new TextureRegionDrawable(new TextureRegion(
-				AssetManager.getInstance().getTexture("menuBackground"))));
 		container.setFillParent(true);
 
-		PagedScrollPane scroll = new PagedScrollPane();
-		scroll.setFlingTime(0.1f); // Amount of time that a turn-page gesture
-									// (fling) lasts.
+		// Table which holds each level pack's levels and is added to the Scroll
+		// pane.
+		Table levelContainer = new Table();
+		levelContainer.setBackground(AssetManager.getInstance()
+				.convertTextureToDrawable("menuBackground"));
+
+		// Following code just creates the screens for each level pack and adds
+		// them to the level container.
 		int levelId = 1;
 		for (int page = 0; page < LEVEL_PACKS; page++) {
 			Table levels = new Table().pad(50);
+			// Sets default padding to 20px top/bottom, 40px left/right
 			levels.defaults().pad(20, 40, 20, 40);
-			levels.add(new Label(packNames[page], skin)).colspan(1).row();
+			Image packLogo = new Image(AssetManager.getInstance().getTexture(
+					packNames[page]));
+			levels.add(packLogo).colspan(3).row(); // Logo spans 3 columns
 			for (int y = 0; y < 2; y++) {
 				levels.row();
-				for (int x = 0; x < 4; x++) {
+				for (int x = 0; x < 3; x++) {
 					levels.add(getLevelButton(levelId++)).expand().fill();
 				}
 			}
-			scroll.addPage(levels);
+			levelContainer.add(levels).row();
 		}
-		scroll.setPageSpacing(200); // Space each page apart by 200 pixels
-		container.add(scroll).expand().fill();
+
+		// Add the levels to a scroll pane
+		ScrollPane scroll = new ScrollPane(levelContainer, skin);
+		scroll.setFadeScrollBars(false); // Make scroll bars always show
+		container.add(scroll).expand().fill().row();
 	}
 
 	@Override
@@ -102,27 +95,6 @@ public class LevelScreen implements Screen {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
-		
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		// Unused
-	}
-
-	@Override
-	public void pause() {
-		// Unused
-	}
-
-	@Override
-	public void resume() {
-		// Unused
-	}
-
-	@Override
-	public void hide() {
-		// Unused
 	}
 
 	@Override
@@ -132,12 +104,12 @@ public class LevelScreen implements Screen {
 	}
 
 	/**
-	 * Creates a button to represent the level
+	 * Creates a button to represent the level.
 	 * 
-	 * @param level
+	 * @param level The level number
 	 * @return The button to use for the level
 	 */
-	public Button getLevelButton(int level) {
+	private Button getLevelButton(int level) {
 		Button button = new Button(skin);
 		ButtonStyle style = button.getStyle();
 		style.up = style.down = null;
@@ -153,39 +125,36 @@ public class LevelScreen implements Screen {
 			data = gameInstance.levelManager.getLevel(level).levelData;
 		}
 
-		boolean unlocked = data == null ? false : data.unlocked;
-		int stars = data == null ? 0 : data.starsEarned;
+		// False if data is not found (i.e. level hasn't been played yet)
+		boolean unlocked = data == null ? false : data.isUnlocked();
 
-		if (unlocked) { // Show the button as unlocked
+		if (unlocked) {
 			// Stack the button image and label on top of the button
 			button.stack(new Image(skin.getDrawable("top")), label)
 					.width(BUTTON_SIZE).height(BUTTON_SIZE).expand().fill();
-		} else { // Show the button as disabled
+		} else {
 			button.stack(new Image(skin.getDrawable("locked-level")), label)
 					.width(BUTTON_SIZE).height(BUTTON_SIZE).expand().fill();
 		}
 
-		// Set the amount of stars shown under the level's icon.
-		Table starTable = new Table();
-		starTable.defaults().pad(5);
-		if (stars > 0) {
-			for (int star = 0; star < 3; star++) {
-				if (stars > star) {
-					starTable.add(new Image(skin.getDrawable("star-filled")))
-							.width(30).height(30);
-				} else {
-					starTable.add(new Image(skin.getDrawable("star-unfilled")))
-							.width(30).height(30);
-				}
-			}
-		}
-
-		button.row();
-		button.add(starTable).height(30);
-
 		button.setName(Integer.toString(level));
 		button.addListener(levelClickListener);
 		return button;
+	}
+
+	/**
+	 * Initialize the skin. The skin is a LibGDX API that tells UI widgets how
+	 * to look.
+	 */
+	private void initializeSkin() {
+		skin = new Skin(Gdx.files.internal("skin/uiskin.json"),
+				new TextureAtlas("skin/uiskin.atlas"));
+		// Set the unlocked level buttons to be green.
+		skin.add("top", skin.newDrawable("default-round", Color.GREEN),
+				Drawable.class);
+		// Set the locked level buttons to be gray.
+		skin.add("locked-level", skin.newDrawable("default-round", Color.GRAY),
+				Drawable.class);
 	}
 
 	/**
@@ -201,5 +170,26 @@ public class LevelScreen implements Screen {
 			}
 		}
 	};
+
+	/*
+	 * The following methods are unused, but are required by the Screen
+	 * interface.
+	 */
+
+	@Override
+	public void resize(int width, int height) {
+	}
+
+	@Override
+	public void pause() {
+	}
+
+	@Override
+	public void resume() {
+	}
+
+	@Override
+	public void hide() {
+	}
 
 }
