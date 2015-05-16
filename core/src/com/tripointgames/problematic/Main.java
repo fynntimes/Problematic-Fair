@@ -1,9 +1,14 @@
 package com.tripointgames.problematic;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.tripointgames.problematic.level.LevelManager;
+import com.tripointgames.problematic.util.AssetManager;
+import com.tripointgames.problematic.util.PreferencesManager;
 
 /**
  * The main game class. This will load all the assets needed by the game, as
@@ -27,13 +32,28 @@ public class Main extends Game {
 		levelManager = new LevelManager();
 		levelManager.loadLevels();
 
+		// Load the game preferences
+		try {
+			PreferencesManager.getInstance().loadPreferences();
+			PreferencesManager.getInstance().checkDefaults();
+		} catch (IOException e) { // Log to user device and exit the game.
+			System.err.println("Error: Could not read the preferences file.");
+			e.printStackTrace();
+			Gdx.app.exit();
+		}
+
 		this.setScreen(new MenuScreen(this));
 	}
 
 	private void loadAssets() {
 		// Load the game textures
-		AssetManager.getInstance().registerTexture("koala",
-				"textures/koalio.png");
+		AssetManager.getInstance().registerTexture("koala", "textures/koalio.png");
+
+		// Load game sounds
+		AssetManager.getInstance().registerSound("wrong-answer",
+				"sounds/wrong-answer.wav");
+		AssetManager.getInstance().registerSound("correct-answer", "sounds/correct-answer.wav");
+
 		// Load the UI textures
 		AssetManager.getInstance().registerTexture("grassyJourney-logo",
 				"textures/Grassy-Journey.png");
@@ -43,20 +63,24 @@ public class Main extends Game {
 				"textures/Sandstorm.png");
 		AssetManager.getInstance().registerTexture("menuBackground",
 				"textures/bg_castle.png");
-		AssetManager.getInstance().registerTexture("playButton",
-				"textures/play.png");
+		AssetManager.getInstance().registerTexture("playButton", "textures/play.png");
 		AssetManager.getInstance().registerTexture("optionsButton",
 				"textures/options.png");
-		AssetManager.getInstance().registerTexture("helpButton",
-				"textures/help.png");
+		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
 		AssetManager.getInstance().registerTexture(
 				"problematicLogo",
 				levelEditor ? "textures/problematic-leveleditor.png"
 						: "textures/Problematic-2.png");
+		AssetManager.getInstance().registerTexture("mathscreenBackground",
+				"textures/chalkboard.jpg");
 	}
 
 	@Override
 	public void render() {
+		if (Gdx.input.isKeyPressed(Keys.M)) {
+			this.setScreen(new MathScreen(this));
+		}
+
 		// Clear the screen to a blue color
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -66,6 +90,8 @@ public class Main extends Game {
 
 	@Override
 	public void dispose() {
+		// Dispose of all levels on exit
+		levelManager.dispose();
 		// Dispose of all assets on exit
 		AssetManager.getInstance().disposeAll();
 	}

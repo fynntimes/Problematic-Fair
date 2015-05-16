@@ -3,7 +3,7 @@ package com.tripointgames.problematic.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.tripointgames.problematic.AssetManager;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * Loads and manages levels.
@@ -13,6 +13,8 @@ import com.tripointgames.problematic.AssetManager;
 public class LevelManager {
 
 	private Array<Level> levels;
+
+	private Level currentLevel = null;
 
 	public LevelManager() {
 		levels = new Array<Level>();
@@ -26,8 +28,10 @@ public class LevelManager {
 				break;
 			currentId++;
 		}
+		// This makes sure the first level is always unlocked.
 		getLevel(1).levelData.setUnlocked(true);
 		getLevel(1).save();
+		currentLevel = getLevel(1); // TODO Remove this
 	}
 
 	/**
@@ -48,15 +52,30 @@ public class LevelManager {
 	}
 
 	public Level getLevel(int id) {
-		id = id - 1;
+		id = id - 1; // Subtract one to get an index starting at 0.
 		// Avoids an ArrayIndexOutOfBoundsException.
-		if (id > levels.size - 1)
-			return null;
+		if (id > levels.size - 1) return null;
 		return levels.get(id);
 	}
 
 	public boolean isLevel(int id) {
 		return getLevel(id) != null;
+	}
+
+	public Level getCurrentLevel() {
+		return currentLevel;
+	}
+
+	public void setCurrentLevel(Level currentLevel) {
+		this.currentLevel = currentLevel;
+	}
+
+	/**
+	 * Dispose of all levels.
+	 */
+	public void dispose() {
+		for (Level level : levels)
+			level.dispose();
 	}
 
 }

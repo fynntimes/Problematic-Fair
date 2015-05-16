@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
 	public void show() {
 		player = new EntityPlayer();
 
-		// Create a camera which will show 10x5 units of the world.
+		// Creates a camera which will show 10x5 units of the world.
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 10, 5);
 		camera.update();
@@ -46,11 +46,6 @@ public class GameScreen implements Screen {
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		level.update(deltaTime);
 		level.render();
-	}
-
-	@Override
-	public void dispose() {
-		level.dispose();
 	}
 
 	/*
@@ -72,6 +67,10 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void hide() {
+	}
+	
+	@Override
+	public void dispose() {
 	}
 
 }

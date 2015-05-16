@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.tripointgames.problematic.level.Level;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * The main menu for the game.
@@ -34,8 +35,8 @@ public class MenuScreen implements Screen {
 
 		// This table holds and positions all buttons on the menu.
 		Table table = new Table();
-		table.setBackground(AssetManager.getInstance()
-				.convertTextureToDrawable("menuBackground"));
+		table.setBackground(AssetManager.getInstance().convertTextureToDrawable(
+				"menuBackground"));
 		table.setFillParent(true);
 
 		Image problematicLogo = new Image(AssetManager.getInstance()
@@ -62,13 +63,10 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if (mainInstance.levelEditor) {
-					TiledMap map = new TmxMapLoader(
-							new AbsoluteFileHandleResolver()).load(System
-							.getProperty("user.dir") + "/level.tmx");
-					AssetManager.getInstance()
-							.registerAsset("levelEditor", map);
-					mainInstance.setScreen(new GameScreen(new Level(
-							"levelEditor")));
+					TiledMap map = new TmxMapLoader(new AbsoluteFileHandleResolver())
+							.load(System.getProperty("user.dir") + "/level.tmx");
+					AssetManager.getInstance().registerAsset("levelEditor", map);
+					mainInstance.setScreen(new GameScreen(new Level("levelEditor")));
 				} else {
 					mainInstance.setScreen(new LevelScreen(mainInstance));
 				}
@@ -83,7 +81,7 @@ public class MenuScreen implements Screen {
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("To the help screen");
+				mainInstance.setScreen(new MathScreen(mainInstance));
 			}
 		});
 

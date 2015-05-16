@@ -1,7 +1,8 @@
 package com.tripointgames.problematic.level;
 
 /**
- * Data about the level. In future updates, this will include more data.
+ * Stores data about the level. This class is serialized and deserialized
+ * into/out of JSON in the LevelManager.
  * 
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */

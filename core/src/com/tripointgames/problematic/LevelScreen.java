@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tripointgames.problematic.level.LevelData;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * The level selection screen.
@@ -106,7 +107,8 @@ public class LevelScreen implements Screen {
 	/**
 	 * Creates a button to represent the level.
 	 * 
-	 * @param level The level number
+	 * @param level
+	 *            The level number
 	 * @return The button to use for the level
 	 */
 	private Button getLevelButton(int level) {
@@ -147,8 +149,8 @@ public class LevelScreen implements Screen {
 	 * to look.
 	 */
 	private void initializeSkin() {
-		skin = new Skin(Gdx.files.internal("skin/uiskin.json"),
-				new TextureAtlas("skin/uiskin.atlas"));
+		skin = new Skin(Gdx.files.internal("skin/uiskin.json"), new TextureAtlas(
+				"skin/uiskin.atlas"));
 		// Set the unlocked level buttons to be green.
 		skin.add("top", skin.newDrawable("default-round", Color.GREEN),
 				Drawable.class);
@@ -165,6 +167,8 @@ public class LevelScreen implements Screen {
 		public void clicked(InputEvent event, float x, float y) {
 			int levelId = Integer.parseInt(event.getListenerActor().getName());
 			if (gameInstance.levelManager.isLevel(levelId)) {
+				gameInstance.levelManager.setCurrentLevel(gameInstance.levelManager
+						.getLevel(levelId));
 				gameInstance.setScreen(new GameScreen(gameInstance.levelManager
 						.getLevel(levelId)));
 			}

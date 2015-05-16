@@ -3,13 +3,14 @@ package com.tripointgames.problematic.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
-import com.tripointgames.problematic.AssetManager;
 import com.tripointgames.problematic.GameScreen;
 import com.tripointgames.problematic.entity.EntityPlayer;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * Stores map and player data for the level.
@@ -51,11 +52,11 @@ public class Level {
 		this.camera = camera;
 		this.player = player;
 		// Get the player spawn position from the map
-		float playerSpawnX = map.getLayers().get("entities").getObjects()
-				.get("player").getProperties().get("x", Float.class)
+		MapProperties playerProperties = map.getLayers().get("entities")
+				.getObjects().get("player").getProperties();
+		float playerSpawnX = playerProperties.get("x", Float.class)
 				* GameScreen.UNIT_SCALE;
-		float playerSpawnY = map.getLayers().get("entities").getObjects()
-				.get("player").getProperties().get("y", Float.class)
+		float playerSpawnY = playerProperties.get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
 
 		// Set player position to the spawn point
@@ -88,7 +89,7 @@ public class Level {
 				+ ".json");
 		if (!levelHandle.exists())
 			save(); // Create the LevelData file.
-		
+
 		this.levelData = json.fromJson(LevelData.class, levelHandle);
 	}
 

@@ -2,7 +2,7 @@ package com.tripointgames.problematic.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.tripointgames.problematic.AssetManager;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
@@ -14,7 +14,7 @@ public class EntityPlayer extends EntityBase {
 	}
 
 	@Override
-	public void handleInput() {
+	protected void handleInput() {
 		// Check for keyboard input
 		// TODO Add button input
 		if ((Gdx.input.isKeyPressed(Keys.SPACE)) && onGround) {

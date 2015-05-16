@@ -1,4 +1,4 @@
-package com.tripointgames.problematic;
+package com.tripointgames.problematic.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

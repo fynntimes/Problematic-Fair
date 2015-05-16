@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.tripointgames.problematic.GameScreen;
 
 /**
- * Base class for all entities.
+ * Base class for all entities. Man
  * 
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */
@@ -36,9 +36,10 @@ public abstract class EntityBase {
 	protected boolean facingRight = true; // Flips the texture
 	protected boolean onGround = true; // False when entity is jumping
 
-	// A Pool is a way of accessing objects without destroying and creating new
-	// ones each frame. This saves a lot of time per frame, since it doesn't
-	// waste time doing that each frame while refreshing collision detection.
+	/*
+	 * A Pool is a group of objects (of the same type) that can be reused. This
+	 * avoids object reallocation, which can take a huge toll on performance.
+	 */
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
 		protected Rectangle newObject() {
@@ -46,7 +47,7 @@ public abstract class EntityBase {
 		}
 	};
 
-	public EntityBase(Texture spritesheet, int individualWidth,
+	protected EntityBase(Texture spritesheet, int individualWidth,
 			int individualHeight) {
 		this.spritesheet = spritesheet;
 
@@ -102,7 +103,7 @@ public abstract class EntityBase {
 	}
 
 	// This can be handled by subclasses.
-	public void handleInput() {
+	protected void handleInput() {
 	}
 
 	private void checkCollisionDetection(TiledMap currentMap) {
@@ -178,7 +179,8 @@ public abstract class EntityBase {
 				Cell cell = layer.getCell(x, y);
 				if (cell != null) {
 					Rectangle rect = rectPool.obtain();
-					rect.set(x, y, 1, 1); // Each rect is 1x1 (See GameScreen.UNIT_SCALE)
+					rect.set(x, y, 1, 1); // Each rect is 1x1 (See
+											// GameScreen.UNIT_SCALE)
 					tiles.add(rect);
 				}
 			}

@@ -1,0 +1,5 @@
+difficulty=Easy
+showSubtractionProblems=true
+showMultiplicationProblems=true
+showDivisionProblems=true
+showAdditionProblems=true
