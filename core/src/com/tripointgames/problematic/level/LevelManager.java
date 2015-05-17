@@ -23,9 +23,7 @@ public class LevelManager {
 	public void loadLevels() {
 		// This loads all the levels in the maps file.
 		int currentId = 0;
-		while (true) {
-			if (loadLevel(currentId) == false) // No more maps, exit the loop
-				break;
+		while (loadLevel(currentId)) {
 			currentId++;
 		}
 		// This makes sure the first level is always unlocked.
