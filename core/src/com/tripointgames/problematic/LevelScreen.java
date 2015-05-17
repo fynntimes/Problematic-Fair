@@ -6,16 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.tripointgames.problematic.level.LevelData;
 import com.tripointgames.problematic.util.AssetManager;
@@ -167,10 +162,15 @@ public class LevelScreen implements Screen {
 		public void clicked(InputEvent event, float x, float y) {
 			int levelId = Integer.parseInt(event.getListenerActor().getName());
 			if (gameInstance.levelManager.isLevel(levelId)) {
-				gameInstance.levelManager.setCurrentLevel(gameInstance.levelManager
-						.getLevel(levelId));
-				gameInstance.setScreen(new GameScreen(gameInstance.levelManager
-						.getLevel(levelId)));
+				if (gameInstance.levelManager.getLevel(levelId).levelData
+						.isUnlocked()) {
+					AssetManager.getInstance().getSound("button-click").play();
+					gameInstance.levelManager
+							.setCurrentLevel(gameInstance.levelManager
+									.getLevel(levelId));
+					gameInstance.setScreen(new GameScreen(gameInstance.levelManager
+							.getLevel(levelId), gameInstance));
+				}
 			}
 		}
 	};

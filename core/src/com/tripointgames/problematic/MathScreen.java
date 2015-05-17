@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.tripointgames.problematic.util.AssetManager;
 import com.tripointgames.problematic.util.MathProblem;
 
@@ -55,26 +55,31 @@ public class MathScreen implements Screen {
 				.convertTextureToDrawable("mathscreenBackground"));
 		stage.addActor(mainContainer);
 
-		directionsLabel = new Label("Solve this math problem to respawn!", skin);
+		// Shown at the top of the screen
+		directionsLabel = new Label(
+				"You fell off! Solve this math problem to respawn.", skin, "smallLabel");
 		mainContainer.add(directionsLabel).align(Align.center).top().expandX().row();
 
+		// Randomly generate a math problem
 		mathProblem = new MathProblem();
 
+		// Add the equation
 		equationsLabel = new Label(mathProblem.equation + " = ?", skin, "largeLabel");
 		mainContainer.add(equationsLabel).align(Align.center).row();
 
+		// Add the answers
 		HorizontalGroup answers = new HorizontalGroup();
 
 		answer1 = new TextButton(String.valueOf(mathProblem.answers[0]), skin);
 		answer1.setName("0"); // Store the answer ID this button represents
 		answer1.padRight(200); // Allow a 200 pixel padding from the next button
 		answer1.addListener(buttonChangeListener); // Add the listener
-		
+
 		answer2 = new TextButton(String.valueOf(mathProblem.answers[1]), skin);
 		answer2.setName("1");
 		answer2.padRight(200);
 		answer2.addListener(buttonChangeListener);
-		
+
 		answer3 = new TextButton(String.valueOf(mathProblem.answers[2]), skin);
 		answer3.setName("2");
 		answer3.padRight(200);
@@ -83,7 +88,7 @@ public class MathScreen implements Screen {
 		answers.addActor(answer1);
 		answers.addActor(answer2);
 		answers.addActor(answer3);
-		
+
 		mainContainer.add(answers).padLeft(100).padTop(100).center().expandX();
 	}
 
@@ -115,6 +120,10 @@ public class MathScreen implements Screen {
 		skin = new Skin();
 
 		// Add the fonts
+		BitmapFont smallerFont = new BitmapFont(Gdx.files.internal("skin/fonts/chalkboard-font.fnt"));
+		smallerFont.getData().setScale(0.75f); // Make this font 75% of its original size.
+		skin.add("smallerFont", smallerFont);
+		
 		skin.add("regularFont",
 				new BitmapFont(Gdx.files.internal("skin/fonts/chalkboard-font.fnt")));
 		skin.add(
@@ -128,6 +137,11 @@ public class MathScreen implements Screen {
 		pixmap.fill();
 		skin.add("white", new Texture(pixmap));
 
+		// Style all small labels
+		LabelStyle smallLabelStyle = new LabelStyle();
+		smallLabelStyle.font = skin.getFont("smallerFont");
+		skin.add("smallLabel", smallLabelStyle);
+		
 		// Style all labels
 		LabelStyle labelStyle = new LabelStyle();
 		labelStyle.font = skin.getFont("regularFont");
@@ -164,7 +178,7 @@ public class MathScreen implements Screen {
 				AssetManager.getInstance().getSound("correct-answer").play();
 				// Return to the level
 				gameInstance.setScreen(new GameScreen(gameInstance.levelManager
-						.getCurrentLevel()));
+						.getCurrentLevel(), gameInstance));
 			} else {
 				// Change the UI to indicate that it was the wrong answer
 				directionsLabel.setText("Uh oh! Try again.");

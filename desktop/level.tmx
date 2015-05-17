@@ -2,10 +2,15 @@
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="2">
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="tileset.png" width="1658" height="218"/>
+  <tile id="2">
+   <properties>
+    <property name="quarterTile" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJztwzENAAAIA7B5wL9XPOyENmkCAAB3TREAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPhtAcF8APg=
+   eJzt0bEJQCEQRMGDK+H336uJgdEPDHTBGVi2gFdFop4jhx5Zenlt7tMhS5cmCfpnnPVtDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeNsASAABLg==
   </data>
  </layer>
  <objectgroup name="entities">

@@ -34,7 +34,9 @@ public abstract class EntityBase {
 	protected EntityState state = EntityState.Standing;
 	protected float stateTime = 0; // Stores animation frame
 	protected boolean facingRight = true; // Flips the texture
-	protected boolean onGround = true; // False when entity is jumping
+
+	public boolean onGround = true; // False when entity is jumping
+	public boolean alive = true; // False when entity dies
 
 	/*
 	 * A Pool is a group of objects (of the same type) that can be reused. This
@@ -56,14 +58,12 @@ public abstract class EntityBase {
 				individualWidth, individualHeight)[0];
 		standing = new Animation(0, individualTextures[0]);
 		jumping = new Animation(0, individualTextures[1]);
-		walking = new Animation(0.15f, individualTextures[2],
-				individualTextures[3], individualTextures[4]);
+		walking = new Animation(0.15f, individualTextures[2], individualTextures[3],
+				individualTextures[4]);
 		walking.setPlayMode(PlayMode.LOOP_PINGPONG);
 
-		this.width = GameScreen.UNIT_SCALE
-				* individualTextures[0].getRegionWidth();
-		this.height = GameScreen.UNIT_SCALE
-				* individualTextures[0].getRegionHeight();
+		this.width = GameScreen.UNIT_SCALE * individualTextures[0].getRegionWidth();
+		this.height = GameScreen.UNIT_SCALE * individualTextures[0].getRegionHeight();
 	}
 
 	public void update(float deltaTime, TiledMap currentMap) {
@@ -82,8 +82,7 @@ public abstract class EntityBase {
 		// Clamp the X velocity to 0 if it's < 1, and set the state to standing
 		if (Math.abs(velocity.x) < 1) {
 			velocity.x = 0;
-			if (onGround)
-				state = EntityState.Standing;
+			if (onGround) state = EntityState.Standing;
 		}
 
 		// Multiply by delta to determine how far to travel in this frame.
@@ -107,20 +106,21 @@ public abstract class EntityBase {
 	}
 
 	private void checkCollisionDetection(TiledMap currentMap) {
+		// Create a bounding box around the entity
 		Rectangle entityBoundingBox = rectPool.obtain();
 		entityBoundingBox.set(position.x, position.y, width, height);
 		int startX, startY, endX, endY;
-		// Set startX and endX to the appropriate boundaries.
+		// Set startX and endX to the bottom-half tile of the player
 		if (velocity.x > 0) {
 			startX = endX = (int) (position.x + width + velocity.x);
 		} else {
 			startX = endX = (int) (position.x + velocity.x);
 		}
+		// Set the startY and endY to the bottom-half tile of the player
 		startY = (int) position.y;
 		endY = (int) (position.y + height);
 		// Get the tiles in this range
-		Array<Rectangle> tiles = getTiles(startX, startY, endX, endY,
-				currentMap);
+		Array<Rectangle> tiles = getTiles(startX, startY, endX, endY, currentMap);
 		// Grow the bounding box by the velocity of the entity to check for
 		// forward collisions.
 		entityBoundingBox.x += velocity.x;
@@ -167,11 +167,11 @@ public abstract class EntityBase {
 
 	// Gets all tiles from (startX, startY) to (endX, endY) in the "walls"
 	// layer of the passed in map.
-	private Array<Rectangle> getTiles(int startX, int startY, int endX,
-			int endY, TiledMap currentMap) {
+	private Array<Rectangle> getTiles(int startX, int startY, int endX, int endY,
+			TiledMap currentMap) {
 		Array<Rectangle> tiles = new Array<Rectangle>();
-		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.getLayers()
-				.get("walls");
+		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.getLayers().get(
+				"walls");
 		rectPool.freeAll(tiles);
 		tiles.clear();
 		for (int y = startY; y <= endY; y++) {
@@ -179,8 +179,14 @@ public abstract class EntityBase {
 				Cell cell = layer.getCell(x, y);
 				if (cell != null) {
 					Rectangle rect = rectPool.obtain();
-					rect.set(x, y, 1, 1); // Each rect is 1x1 (See
-											// GameScreen.UNIT_SCALE)
+					// Each rectangle is 1x1 due to the unit scale being the
+					// tile size. However, if the tile is a quarter one,
+					// the height will be smaller.
+
+					float tileHeight = 1f;
+					if (cell.getTile().getProperties().containsKey("quarterTile"))
+						tileHeight = 0.25f;
+					rect.set(x, y, 1, tileHeight);
 					tiles.add(rect);
 				}
 			}

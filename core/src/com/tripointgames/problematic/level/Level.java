@@ -9,6 +9,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.tripointgames.problematic.GameScreen;
+import com.tripointgames.problematic.Main;
+import com.tripointgames.problematic.MathScreen;
 import com.tripointgames.problematic.entity.EntityPlayer;
 import com.tripointgames.problematic.util.AssetManager;
 
@@ -18,6 +20,8 @@ import com.tripointgames.problematic.util.AssetManager;
  * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
  */
 public class Level {
+
+	private Main gameInstance;
 
 	public String levelAssetKey;
 	private TiledMap map;
@@ -48,12 +52,14 @@ public class Level {
 	 * This method should be called by the GameScreen class upon load. This sets
 	 * up the level so it is ready to be rendered.
 	 */
-	public void prepare(OrthographicCamera camera, EntityPlayer player) {
+	public void prepare(OrthographicCamera camera, EntityPlayer player,
+			Main gameInstance) {
 		this.camera = camera;
 		this.player = player;
+		this.gameInstance = gameInstance;
 		// Get the player spawn position from the map
-		MapProperties playerProperties = map.getLayers().get("entities")
-				.getObjects().get("player").getProperties();
+		MapProperties playerProperties = map.getLayers().get("entities").getObjects()
+				.get("player").getProperties();
 		float playerSpawnX = playerProperties.get("x", Float.class)
 				* GameScreen.UNIT_SCALE;
 		float playerSpawnY = playerProperties.get("y", Float.class)
@@ -70,9 +76,19 @@ public class Level {
 		// Update the player
 		player.update(delta, this.map);
 
+		// Check if the player is dead
+		if (!player.alive) {
+			// Switch to the math screen
+			AssetManager.getInstance().getSound("player-death").play();
+			gameInstance.setScreen(new MathScreen(gameInstance));
+			return;
+		}
+
 		// Make the camera follow the player
 		camera.position.x = player.position.x;
+		adjustCamera();
 		camera.update();
+
 	}
 
 	public void render() {
@@ -85,17 +101,14 @@ public class Level {
 	}
 
 	public void loadData() {
-		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey
-				+ ".json");
-		if (!levelHandle.exists())
-			save(); // Create the LevelData file.
+		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey + ".json");
+		if (!levelHandle.exists()) save(); // Create the LevelData file.
 
 		this.levelData = json.fromJson(LevelData.class, levelHandle);
 	}
 
 	public void save() {
-		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey
-				+ ".json");
+		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey + ".json");
 		levelHandle.writeString(json.toJson(levelData), false);
 	}
 
@@ -103,7 +116,22 @@ public class Level {
 		// Dispose of all resources to free memory
 		map.dispose();
 		renderer.dispose();
-		player.dispose();
+		if (player != null) player.dispose();
+	}
+
+	public int getMapWidth() {
+		return map.getProperties().get("width", Integer.class);
+	}
+
+	private void adjustCamera() {
+		// Stop the camera if it goes off the map so the player does not see
+		// past the edge.
+		if (camera.position.x < 5) {
+			camera.position.x = 5;
+		}
+		if (camera.position.x > getMapWidth()) {
+			camera.position.x = getMapWidth();
+		}
 	}
 
 }

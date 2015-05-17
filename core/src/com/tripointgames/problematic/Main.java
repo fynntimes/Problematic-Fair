@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.tripointgames.problematic.level.LevelManager;
 import com.tripointgames.problematic.util.AssetManager;
@@ -52,7 +51,12 @@ public class Main extends Game {
 		// Load game sounds
 		AssetManager.getInstance().registerSound("wrong-answer",
 				"sounds/wrong-answer.wav");
-		AssetManager.getInstance().registerSound("correct-answer", "sounds/correct-answer.wav");
+		AssetManager.getInstance().registerSound("correct-answer",
+				"sounds/correct-answer.wav");
+		AssetManager.getInstance().registerSound("player-death",
+				"sounds/player-death.wav");
+		AssetManager.getInstance().registerSound("button-click",
+				"sounds/button-click.wav");
 
 		// Load the UI textures
 		AssetManager.getInstance().registerTexture("grassyJourney-logo",
@@ -77,10 +81,6 @@ public class Main extends Game {
 
 	@Override
 	public void render() {
-		if (Gdx.input.isKeyPressed(Keys.M)) {
-			this.setScreen(new MathScreen(this));
-		}
-
 		// Clear the screen to a blue color
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

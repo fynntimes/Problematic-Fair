@@ -125,9 +125,6 @@ public class PreferencesManager {
 		if (!isSet("showMultiplicationProblems")) {
 			set("showMultiplicationProblems", true);
 		}
-		if (!isSet("showDivisionProblems")) {
-			set("showDivisionProblems", true);
-		}
 		if (!isSet("difficulty")) {
 			set("difficulty", Difficulty.Easy);
 		}

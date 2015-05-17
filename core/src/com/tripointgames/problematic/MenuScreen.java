@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.tripointgames.problematic.level.Level;
 import com.tripointgames.problematic.util.AssetManager;
 
@@ -22,11 +22,11 @@ import com.tripointgames.problematic.util.AssetManager;
  */
 public class MenuScreen implements Screen {
 
-	private Main mainInstance;
+	private Main gameInstance;
 	private Stage stage;
 
-	public MenuScreen(Main mainInstance) {
-		this.mainInstance = mainInstance;
+	public MenuScreen(Main gameInstance) {
+		this.gameInstance = gameInstance;
 	}
 
 	@Override
@@ -51,6 +51,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				System.out.println("To the options screen");
+				AssetManager.getInstance().getSound("button-click").play();
 			}
 		});
 
@@ -62,13 +63,14 @@ public class MenuScreen implements Screen {
 		playButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				if (mainInstance.levelEditor) {
+				AssetManager.getInstance().getSound("button-click").play();
+				if (gameInstance.levelEditor) {
 					TiledMap map = new TmxMapLoader(new AbsoluteFileHandleResolver())
 							.load(System.getProperty("user.dir") + "/level.tmx");
 					AssetManager.getInstance().registerAsset("levelEditor", map);
-					mainInstance.setScreen(new GameScreen(new Level("levelEditor")));
+					gameInstance.setScreen(new GameScreen(new Level("levelEditor"), gameInstance));
 				} else {
-					mainInstance.setScreen(new LevelScreen(mainInstance));
+					gameInstance.setScreen(new LevelScreen(gameInstance));
 				}
 			}
 		});
@@ -81,7 +83,8 @@ public class MenuScreen implements Screen {
 		helpButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				mainInstance.setScreen(new MathScreen(mainInstance));
+				AssetManager.getInstance().getSound("button-click").play();
+				gameInstance.setScreen(new MathScreen(gameInstance));
 			}
 		});
 
