@@ -48,6 +48,11 @@ public class LevelManager {
 		AssetManager.getInstance().registerMap("level" + id,
 				"maps/level" + id + ".tmx");
 		levels.add(new Level("level" + id));
+		
+		// Testing stuff
+//		getLevel(id + 1).levelData.setUnlocked(true);
+//		getLevel(id + 1).save();
+		
 		return true;
 	}
 

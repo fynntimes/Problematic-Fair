@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.tripointgames.problematic.util.AssetManager;
 import com.tripointgames.problematic.util.MathProblem;
 
@@ -121,7 +121,7 @@ public class MathScreen implements Screen {
 
 		// Add the fonts
 		BitmapFont smallerFont = new BitmapFont(Gdx.files.internal("skin/fonts/chalkboard-font.fnt"));
-		smallerFont.getData().setScale(0.75f); // Make this font 75% of its original size.
+		smallerFont.setScale(0.75f); // Make this font 75% of its original size.
 		skin.add("smallerFont", smallerFont);
 		
 		skin.add("regularFont",

@@ -10,15 +10,15 @@
  </tileset>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0csKgCAQBVDBRUG06v//tYKCiKYyqUWcA5dhVPCVEgDAtWap3ZRhSv/SPrmw/5umYn4/F60dgszyrqab/Tq2TTT+5A/P7hbdpzZ39qs5+1rbIF8rfYejHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/mIEpIoDpg==
+   eJzt0UEKgCAUBFCtRa2r+5+1NoHEj4KglN6DAb8oIpMSAEBKfZA78oM3hwd3W9WdrKM5kk/W+5wP+9OWOchSnDn2cDW3Jvp/Gd41FuF7uqiLPuqiCwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIB/WwH8MwGV
   </data>
  </layer>
  <objectgroup name="entities">
-  <object id="1" name="player" x="81" y="408"/>
+  <object id="1" name="player" x="214.333" y="442.667"/>
  </objectgroup>
  <layer name="NO WALLS" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0EEKgCAQQNHZFF2gXfc/Z7iTcJAWisJ78FFBFI0AABjrTtrVMaBz6gvWkP3FKp6q+Mxbe7Kys+qxd/+M/v5Da126OgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwA5eDHUHiA==
+   eJzt0UEJAEAMA8HqqH+hfZZTEOjNQAxkqwAA4B99YFekf9RjpT/UY6X/0+OV/k8PAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgJwBQMcZzQ==
   </data>
  </layer>
 </map>

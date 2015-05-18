@@ -42,7 +42,7 @@ public abstract class EntityBase {
 	 * A Pool is a group of objects (of the same type) that can be reused. This
 	 * avoids object reallocation, which can take a huge toll on performance.
 	 */
-	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
+	private Pool<Rectangle> rectanglePool = new Pool<Rectangle>() {
 		@Override
 		protected Rectangle newObject() {
 			return new Rectangle();
@@ -106,47 +106,65 @@ public abstract class EntityBase {
 	}
 
 	private void checkCollisionDetection(TiledMap currentMap) {
-		// Create a bounding box around the entity
-		Rectangle entityBoundingBox = rectPool.obtain();
-		entityBoundingBox.set(position.x, position.y, width, height);
+		// Create a bounding box surrounding this entity
+		Rectangle entityBoundingBox = getBoundingBox();
+
+		// Stores the radius of tiles to check around the entity.
 		int startX, startY, endX, endY;
-		// Set startX and endX to the bottom-half tile of the player
-		if (velocity.x > 0) {
-			startX = endX = (int) (position.x + width + velocity.x);
-		} else {
-			startX = endX = (int) (position.x + velocity.x);
-		}
-		// Set the startY and endY to the bottom-half tile of the player
+
+		// Calculate which tiles to check on the x-axis.
+		if (velocity.x > 0) startX = endX = (int) (position.x + width + velocity.x);
+		else startX = endX = (int) (position.x + velocity.x);
+
+		// Calculate which tiles to check on the y-axis.
 		startY = (int) position.y;
 		endY = (int) (position.y + height);
-		// Get the tiles in this range
+
 		Array<Rectangle> tiles = getTiles(startX, startY, endX, endY, currentMap);
-		// Grow the bounding box by the velocity of the entity to check for
-		// forward collisions.
-		entityBoundingBox.x += velocity.x;
-		for (Rectangle tile : tiles) {
-			// Stop the entity upon horizontal collision with a tile.
-			if (entityBoundingBox.overlaps(tile)) {
-				velocity.x = 0;
-				break;
-			}
-		}
+
+		handleHorizontalCollision(entityBoundingBox, tiles);
 		entityBoundingBox.x = position.x;
 
-		// If the entity is moving up, check tiles above the entity.
-		if (velocity.y > 0) {
-			startY = endY = (int) (position.y + height + velocity.y);
-		} else { // If it is not moving up, check tiles below the entity.
-			startY = endY = (int) (position.y + velocity.y);
-		}
+		// If velocity is positive, check tiles above entity. Otherwise check
+		// the tiles below.
+		if (velocity.y > 0) startY = endY = (int) (position.y + height + velocity.y);
+		else startY = endY = (int) (position.y + velocity.y);
 
-		// Same thing as above, but with Y values instead.
 		startX = (int) position.x;
 		endX = (int) (position.x + width);
+
 		tiles = getTiles(startX, startY, endX, endY, currentMap);
-		entityBoundingBox.y += velocity.y;
+
+		handleVerticalCollision(entityBoundingBox, tiles);
+
+		// Done with the rectangle, free it.
+		rectanglePool.free(entityBoundingBox);
+	}
+
+	private Rectangle getBoundingBox() {
+		// Create a bounding box around the entity
+		Rectangle entityBoundingBox = rectanglePool.obtain();
+		entityBoundingBox.set(position.x, position.y, width, height);
+		return entityBoundingBox;
+	}
+
+	private void handleHorizontalCollision(Rectangle boundingBox,
+			Array<Rectangle> tiles) {
+		// Grow the bounding box by the velocity of the entity to check for
+		// forward collisions.
+		boundingBox.x += velocity.x;
 		for (Rectangle tile : tiles) {
-			if (entityBoundingBox.overlaps(tile)) {
+			// Stop the entity upon horizontal collision with a tile.
+			if (boundingBox.overlaps(tile)) {
+				velocity.x = 0;
+			}
+		}
+	}
+
+	private void handleVerticalCollision(Rectangle boundingBox, Array<Rectangle> tiles) {
+		boundingBox.y += velocity.y;
+		for (Rectangle tile : tiles) {
+			if (boundingBox.overlaps(tile)) {
 				// Above collision, set the entity's y to just below the tile
 				if (velocity.y > 0) {
 					position.y = tile.y - height;
@@ -161,8 +179,6 @@ public abstract class EntityBase {
 				break;
 			}
 		}
-		// Done with the rectangle, free it.
-		rectPool.free(entityBoundingBox);
 	}
 
 	// Gets all tiles from (startX, startY) to (endX, endY) in the "walls"
@@ -172,13 +188,13 @@ public abstract class EntityBase {
 		Array<Rectangle> tiles = new Array<Rectangle>();
 		TiledMapTileLayer layer = (TiledMapTileLayer) currentMap.getLayers().get(
 				"walls");
-		rectPool.freeAll(tiles);
+		rectanglePool.freeAll(tiles);
 		tiles.clear();
 		for (int y = startY; y <= endY; y++) {
 			for (int x = startX; x <= endX; x++) {
 				Cell cell = layer.getCell(x, y);
 				if (cell != null) {
-					Rectangle rect = rectPool.obtain();
+					Rectangle rect = rectanglePool.obtain();
 					// Each rectangle is 1x1 due to the unit scale being the
 					// tile size. However, if the tile is a quarter one,
 					// the height will be smaller.

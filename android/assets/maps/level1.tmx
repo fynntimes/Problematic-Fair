@@ -10,7 +10,7 @@
  </tileset>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0csKgCAQBVDBRUG06v//tYKCiKYyqUWcA5dhVPCVEgDAtWap3ZRhSv/SPrmw/5umYn4/F60dgszyrqab/Tq2TTT+5A/P7hbdpzZ39qs5+1rbIF8rfYejHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/mIEpIoDpg==
+   eJzt0rEKgCAUBVChoSFaqv//1holnoll1HAOSNENvS9KCQCgbshWKlyj/Jzlz780VvJormjG6P5pl1q3Wv7EdKz1tOYsX4J8K+xV6tnSv+esa6dz3vz+vUVdr/q3vn9HtF/+PwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwB/so7YBzQ==
   </data>
  </layer>
  <objectgroup name="entities">
@@ -18,7 +18,7 @@
  </objectgroup>
  <layer name="NO WALLS" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0EEKgCAQQNHZFF2gXfc/Z7iTcJAWisJ78FFBFI0AABjrTtrVMaBz6gvWkP3FKp6q+Mxbe7Kys+qxd/+M/v5Da126OgEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwA5eDHUHiA==
+   eJztybEJAAAIwDAP8f873UXcdEqgUyMAAAD+ZGt7ug0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgFkB5nMKgQ==
   </data>
  </layer>
 </map>
