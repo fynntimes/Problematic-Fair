@@ -16,14 +16,17 @@ import com.tripointgames.problematic.level.LevelData;
 import com.tripointgames.problematic.util.AssetManager;
 
 /**
- * The level selection screen.
+ * The level selection screen. This contains pages for all 3 level packs, and
+ * each page has 6 level buttons on it. All of this is contained on a scrollable
+ * pane.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class LevelScreen implements Screen {
 
 	/** Determines the amount of pages shown on the level screen. */
 	public static final int LEVEL_PACKS = 3;
+	/** The asset keys of the level pack icons. */
 	private String[] packNames = { "grassyJourney-logo", "rockyRoad-logo",
 			"sandstorm-logo" };
 
@@ -35,6 +38,7 @@ public class LevelScreen implements Screen {
 	private Skin skin;
 	private Stage stage;
 	private Table container;
+	private Table levelContainer;
 
 	public LevelScreen(Main gameInstance) {
 		this.gameInstance = gameInstance;
@@ -43,7 +47,6 @@ public class LevelScreen implements Screen {
 	@Override
 	public void show() {
 		stage = new Stage(new ScreenViewport());
-
 		initializeSkin();
 
 		// Allow this stage to accept input
@@ -54,30 +57,9 @@ public class LevelScreen implements Screen {
 		stage.addActor(container);
 		container.setFillParent(true);
 
-		// Table which holds each level pack's levels and is added to the Scroll
-		// pane.
-		Table levelContainer = new Table();
-		levelContainer.setBackground(AssetManager.getInstance()
-				.convertTextureToDrawable("menuBackground"));
+		initLevelContainer();
 
-		// Following code just creates the screens for each level pack and adds
-		// them to the level container.
-		int levelId = 1;
-		for (int page = 0; page < LEVEL_PACKS; page++) {
-			Table levels = new Table().pad(50);
-			// Sets default padding to 20px top/bottom, 40px left/right
-			levels.defaults().pad(20, 40, 20, 40);
-			Image packLogo = new Image(AssetManager.getInstance().getTexture(
-					packNames[page]));
-			levels.add(packLogo).colspan(3).row(); // Logo spans 3 columns
-			for (int y = 0; y < 2; y++) {
-				levels.row();
-				for (int x = 0; x < 3; x++) {
-					levels.add(getLevelButton(levelId++)).expand().fill();
-				}
-			}
-			levelContainer.add(levels).row();
-		}
+		constructLevelPackPages();
 
 		// Add the levels to a scroll pane
 		ScrollPane scroll = new ScrollPane(levelContainer, skin);
@@ -97,6 +79,55 @@ public class LevelScreen implements Screen {
 	public void dispose() {
 		stage.dispose();
 		skin.dispose();
+	}
+
+	/**
+	 * Initialize the level container with a background. The level container is
+	 * the table which holds each level pack's levels and is added to the Scroll
+	 * pane.
+	 */
+	private void initLevelContainer() {
+		levelContainer = new Table();
+		levelContainer.setBackground(AssetManager.getInstance()
+				.convertTextureToDrawable("menuBackground"));
+	}
+
+	/**
+	 * Creates the screens for each level pack and adds them to the level
+	 * container.
+	 */
+	private void constructLevelPackPages() {
+		for (int page = 0; page < LEVEL_PACKS; page++) {
+			constructLevelPackPage(page);
+		}
+	}
+
+	/**
+	 * Create the screen for a specific level pack.
+	 * 
+	 * @param page
+	 *            The page / level pack number to generate for.
+	 */
+	private void constructLevelPackPage(int page) {
+		// Multiply by 6 because each page has 6 levels, and each level pack
+		// continues where the last one left off.
+		int currentLevelID = page * 6;
+
+		Table levels = new Table().pad(50);
+		// Sets default padding to 20px top/bottom, 40px left/right
+		levels.defaults().pad(20, 40, 20, 40);
+		Image packLogo = new Image(AssetManager.getInstance().getTexture(
+				packNames[page]));
+		levels.add(packLogo).colspan(3).row(); // Logo spans 3 columns
+
+		for (int y = 0; y < 2; y++) {
+			levels.row();
+			for (int x = 0; x < 3; x++) {
+				currentLevelID++;
+				levels.add(getLevelButton(currentLevelID)).expand().fill();
+			}
+		}
+		levelContainer.add(levels).row();
 	}
 
 	/**

@@ -9,7 +9,7 @@ import com.tripointgames.problematic.GameGUI;
  * Handles input from the game GUI movement buttons, and responds by moving the
  * player.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  *
  */
 public class PlayerInput implements InputProcessor {

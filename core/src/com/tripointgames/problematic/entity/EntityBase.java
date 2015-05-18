@@ -17,7 +17,7 @@ import com.tripointgames.problematic.GameScreen;
 /**
  * Base class for all entities. Man
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public abstract class EntityBase {
 

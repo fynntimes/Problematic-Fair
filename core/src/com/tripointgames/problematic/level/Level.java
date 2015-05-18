@@ -17,7 +17,7 @@ import com.tripointgames.problematic.util.AssetManager;
 /**
  * Stores map and player data for the level.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class Level {
 

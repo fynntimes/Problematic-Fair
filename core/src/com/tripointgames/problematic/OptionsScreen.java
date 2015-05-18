@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /**
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class OptionsScreen implements Screen {
 

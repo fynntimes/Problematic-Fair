@@ -4,7 +4,7 @@ package com.tripointgames.problematic.entity;
  * The state of the entity. This determines the texture of the entity, and
  * sometimes the behaviour of the entity as well.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public enum EntityState {
 

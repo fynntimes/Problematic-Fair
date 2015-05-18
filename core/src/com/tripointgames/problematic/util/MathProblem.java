@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.MathUtils;
  * Generates and stores the number sentence and answers for a math problem. This
  * is used by the MathScreen.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class MathProblem {
 

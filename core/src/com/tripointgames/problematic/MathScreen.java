@@ -22,7 +22,7 @@ import com.tripointgames.problematic.util.MathProblem;
  * the screen that shows a math equation, and allows the user to choose their
  * answer.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class MathScreen implements Screen {
 

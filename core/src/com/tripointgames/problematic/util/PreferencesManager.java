@@ -9,10 +9,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
 /**
- * Saves, manages, and changes game options. This class is a singleton, so it
- * can be accessed statically.
+ * Singleton class which saves, manages, and changes game options.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class PreferencesManager {
 
@@ -21,11 +20,20 @@ public class PreferencesManager {
 
 	private static PreferencesManager instance;
 
+	/**
+	 * Gets a static instance of the PreferencesManager.
+	 * 
+	 * @return An instance of the PreferencesManager. If it has not been
+	 *         initialized it will be created.
+	 */
 	public static PreferencesManager getInstance() {
 		if (instance == null) instance = new PreferencesManager();
 		return instance;
 	}
 
+	/**
+	 * Can only be initialized internally.
+	 */
 	protected PreferencesManager() {
 		preferences = new HashMap<String, String>();
 		// Local file "preferences.txt" (i.e. stored in the app's root folder)

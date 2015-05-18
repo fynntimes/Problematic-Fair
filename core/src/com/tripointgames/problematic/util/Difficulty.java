@@ -4,7 +4,7 @@ package com.tripointgames.problematic.util;
  * The difficulty of the game is determined by the user. This influences how
  * challenging math problems are.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public enum Difficulty {
 

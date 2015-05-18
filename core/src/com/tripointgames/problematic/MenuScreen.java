@@ -18,13 +18,19 @@ import com.tripointgames.problematic.util.AssetManager;
 /**
  * The main menu for the game.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class MenuScreen implements Screen {
 
 	private Main gameInstance;
 	private Stage stage;
+	private Table mainContainer;
 
+	/**
+	 * @param gameInstance
+	 *            Instance of Main for access to variables stored only in the
+	 *            Main class.
+	 */
 	public MenuScreen(Main gameInstance) {
 		this.gameInstance = gameInstance;
 	}
@@ -33,20 +39,51 @@ public class MenuScreen implements Screen {
 	public void show() {
 		stage = new Stage();
 
-		// This table holds and positions all buttons on the menu.
-		Table table = new Table();
-		table.setBackground(AssetManager.getInstance().convertTextureToDrawable(
-				"menuBackground"));
-		table.setFillParent(true);
+		initMainContainer();
 
+		// Add buttons to the main container
+		addLogo();
+		addOptionsButton();
+		addPlayButton();
+		addHelpButton();
+
+		stage.addActor(mainContainer);
+		Gdx.input.setInputProcessor(stage); // Allows the stage to take in input
+	}
+
+	@Override
+	public void render(float delta) {
+		stage.act();
+		stage.draw();
+	}
+
+	/**
+	 * Initialize the main table (container) with a background. This table holds
+	 * and positions all buttons on the menu.
+	 */
+	private void initMainContainer() {
+		mainContainer = new Table();
+		mainContainer.setBackground(AssetManager.getInstance()
+				.convertTextureToDrawable("menuBackground"));
+		mainContainer.setFillParent(true);
+	}
+
+	private void addLogo() {
 		Image problematicLogo = new Image(AssetManager.getInstance()
 				.convertTextureToDrawable("problematicLogo"));
-		table.add(problematicLogo).colspan(3).align(Align.center).row();
+		mainContainer.add(problematicLogo).colspan(3).align(Align.center).row();
+	}
 
+	/**
+	 * Add the options button to the main container. The options button is
+	 * responsible for taking the user to the options screen.
+	 */
+	private void addOptionsButton() {
 		ImageButton optionsButton = new ImageButton(AssetManager.getInstance()
 				.convertTextureToDrawable("optionsButton"));
 
-		// Listener is fired when the button is pressed.
+		// Listener is fired when the button is pressed, so take the user to the
+		// options screen.
 		optionsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
@@ -55,8 +92,14 @@ public class MenuScreen implements Screen {
 			}
 		});
 
-		table.add(optionsButton);
+		mainContainer.add(optionsButton);
+	}
 
+	/**
+	 * Add the play button to the main container. The play button is responsible
+	 * for taking the user to the level screen, where they choose a level.
+	 */
+	private void addPlayButton() {
 		ImageButton playButton = new ImageButton(AssetManager.getInstance()
 				.convertTextureToDrawable("playButton"));
 
@@ -68,15 +111,23 @@ public class MenuScreen implements Screen {
 					TiledMap map = new TmxMapLoader(new AbsoluteFileHandleResolver())
 							.load(System.getProperty("user.dir") + "/level.tmx");
 					AssetManager.getInstance().registerAsset("levelEditor", map);
-					gameInstance.setScreen(new GameScreen(new Level("levelEditor"), gameInstance));
+					gameInstance.setScreen(new GameScreen(new Level("levelEditor"),
+							gameInstance));
 				} else {
 					gameInstance.setScreen(new LevelScreen(gameInstance));
 				}
 			}
 		});
 
-		table.add(playButton);
+		mainContainer.add(playButton);
+	}
 
+	/**
+	 * Add the help button to the main container. The help button tells the
+	 * player how to use the movement controls and how to advance to the next
+	 * level.
+	 */
+	private void addHelpButton() {
 		ImageButton helpButton = new ImageButton(AssetManager.getInstance()
 				.convertTextureToDrawable("helpButton"));
 
@@ -87,17 +138,8 @@ public class MenuScreen implements Screen {
 				gameInstance.setScreen(new MathScreen(gameInstance));
 			}
 		});
-
-		table.add(helpButton);
-
-		stage.addActor(table);
-		Gdx.input.setInputProcessor(stage); // Allows the stage to take in input
-	}
-
-	@Override
-	public void render(float delta) {
-		stage.act();
-		stage.draw();
+		
+		mainContainer.add(helpButton);
 	}
 
 	/*

@@ -12,9 +12,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 
 /**
  * Singleton class that stores all game assets, such as textures, maps, and
- * sounds. All assets are loaded before the MenuScreen is shown.
+ * sounds. All assets are loaded in the Main class, before the user sees
+ * anything.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class AssetManager {
 
@@ -26,14 +27,16 @@ public class AssetManager {
 	 * @return The AssetManager instance.
 	 */
 	public static AssetManager getInstance() {
-		if (instance == null)
-			instance = new AssetManager();
+		if (instance == null) instance = new AssetManager();
 		return instance;
 	}
 
 	private ObjectMap<String, Object> assetMap; // <Asset Key, Asset Object>
 
-	protected AssetManager() { // Internal initialization only.
+	/**
+	 * Internal initialization only (since this is a Singleton)
+	 */
+	protected AssetManager() {
 		assetMap = new ObjectMap<String, Object>();
 	}
 
@@ -47,8 +50,7 @@ public class AssetManager {
 	 */
 	public void registerAsset(String key, Object value) {
 		// If the asset is already registered, remove it so it can be replaced.
-		if (getAsset(key) != null)
-			assetMap.remove(key);
+		if (getAsset(key) != null) assetMap.remove(key);
 		assetMap.put(key, value);
 	}
 
@@ -136,8 +138,7 @@ public class AssetManager {
 
 		// Avoid a class cast exception and null pointer exception by checking
 		// if it is an instance of Texture and making sure it is not null.
-		if (!(asset instanceof Texture) || asset == null)
-			return null;
+		if (!(asset instanceof Texture) || asset == null) return null;
 
 		return (Texture) asset;
 	}
@@ -153,8 +154,7 @@ public class AssetManager {
 	public Sound getSound(String key) {
 		Object asset = assetMap.get(key);
 
-		if (!(asset instanceof Sound) || asset == null)
-			return null;
+		if (!(asset instanceof Sound) || asset == null) return null;
 
 		return (Sound) asset;
 	}
@@ -170,21 +170,24 @@ public class AssetManager {
 	public TiledMap getMap(String key) {
 		Object asset = assetMap.get(key);
 
-		if (!(asset instanceof TiledMap) || asset == null)
-			return null;
+		if (!(asset instanceof TiledMap) || asset == null) return null;
 
 		return (TiledMap) asset;
 	}
 
 	/**
-	 * Convert a Texture to a drawable Texture, which can be added to a UI button.
-	 * @param textureAssetKey The asset key of the texture to be converted.
+	 * Convert a Texture to a drawable Texture, which can be added to a UI
+	 * button.
+	 * 
+	 * @param textureAssetKey
+	 *            The asset key of the texture to be converted.
 	 * @return The converted texture.
 	 */
 	public TextureRegionDrawable convertTextureToDrawable(String textureAssetKey) {
-		return new TextureRegionDrawable(new TextureRegion(getTexture(textureAssetKey)));
+		return new TextureRegionDrawable(new TextureRegion(
+				getTexture(textureAssetKey)));
 	}
-	
+
 	/**
 	 * Dispose of an asset. This will check if it is an instance of Texture,
 	 * Sound, or TiledMap, and it will dispose of it accordingly.
@@ -194,8 +197,7 @@ public class AssetManager {
 	 */
 	public void dispose(String key) {
 		Object asset = getAsset(key);
-		if (asset == null)
-			return;
+		if (asset == null) return;
 
 		// Dispose the asset object
 		if (asset instanceof Texture) {
@@ -204,7 +206,7 @@ public class AssetManager {
 			((Sound) asset).stop();
 			((Sound) asset).dispose();
 		} else if (asset instanceof TiledMap) {
-			((TiledMap) asset).dispose(); 
+			((TiledMap) asset).dispose();
 		}
 	}
 

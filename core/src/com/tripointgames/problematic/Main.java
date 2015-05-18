@@ -11,10 +11,10 @@ import com.tripointgames.problematic.util.PreferencesManager;
 
 /**
  * The main game class. This will load all the assets needed by the game, as
- * well as initialize the background music and the LevelManager. It will then
- * switch to the Menu screen.
+ * well as initialize the background music and the LevelManager (which then
+ * loads all the levels). It will then switch to the Main Menu screen.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  *
  */
 public class Main extends Game {
@@ -39,6 +39,7 @@ public class Main extends Game {
 			System.err.println("Error: Could not read the preferences file.");
 			e.printStackTrace();
 			Gdx.app.exit();
+			return;
 		}
 
 		this.setScreen(new MenuScreen(this));
@@ -81,10 +82,11 @@ public class Main extends Game {
 
 	@Override
 	public void render() {
-		// Clear the screen to a blue color
+		// Remove pixels from the previous frame by setting all pixels to
+		// sky blue.
 		Gdx.gl.glClearColor(0.7f, 0.7f, 1.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		// The superclass' render method renders the current screen
+		// The superclass' render method renders the current screen, call it
 		super.render();
 	}
 

@@ -11,7 +11,7 @@ import com.tripointgames.problematic.level.Level;
 /**
  * The actual GameScreen, where all the gameplay is handled.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class GameScreen implements Screen {
 
@@ -57,6 +57,7 @@ public class GameScreen implements Screen {
 
 		gui.render();
 		
+		// Debug text
 		fontBatch.begin();
 		font.draw(fontBatch, "X: " + player.position.x + ", Y: " + player.position.y
 				+ ", CamX: " + camera.position.x+ ", CamY: " + camera.position.y + ", OnGround? " + player.onGround, 0, 20);

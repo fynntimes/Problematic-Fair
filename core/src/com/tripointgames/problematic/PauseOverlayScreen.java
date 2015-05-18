@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
  * The pause screen will be rendered on top of the game screen, which is why it
  * is called an overlay screen. It includes a Resume and Main Menu button.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class PauseOverlayScreen {
 

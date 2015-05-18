@@ -7,7 +7,7 @@ import com.tripointgames.problematic.GameGUI;
 import com.tripointgames.problematic.util.AssetManager;
 
 /**
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  */
 public class EntityPlayer extends EntityBase {
 

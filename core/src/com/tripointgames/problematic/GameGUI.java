@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 /**
  * The GUI for in-game. Includes movement and pause buttons.
  * 
- * @author Faizaan Datoo, Willie Hawley, and Alex Cevicelow
+ * @author Faizaan Datoo
  *
  */
 public class GameGUI {
@@ -32,7 +32,7 @@ public class GameGUI {
 	public GameGUI() {
 		batch = new SpriteBatch();
 
-		// Initialize the images by getting them from the spritesheet.
+		// Initialize the images by getting them from the button sprite sheet.
 
 		// Left button
 		leftButton = new TextureRegion(new Texture(
