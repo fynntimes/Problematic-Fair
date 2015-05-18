@@ -23,8 +23,10 @@ public class LevelManager {
 	public void loadLevels() {
 		// This loads all the levels in the maps file.
 		int currentId = 0;
+
+		// Load level returns false when the level file does not exist.
 		while (loadLevel(currentId)) {
-			currentId++;
+			currentId++; // Load the next level ID
 		}
 		// This makes sure the first level is always unlocked.
 		getLevel(1).levelData.setUnlocked(true);
@@ -46,11 +48,10 @@ public class LevelManager {
 		AssetManager.getInstance().registerMap("level" + id,
 				"maps/level" + id + ".tmx");
 		levels.add(new Level("level" + id));
-		
-		// Testing stuff
-//		getLevel(id + 1).levelData.setUnlocked(true);
-//		getLevel(id + 1).save();
-		
+
+		// getLevel(id + 1).levelData.setUnlocked(true);
+		// getLevel(id + 1).save();
+
 		return true;
 	}
 
