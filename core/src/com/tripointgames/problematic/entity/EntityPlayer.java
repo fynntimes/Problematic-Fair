@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.tripointgames.problematic.GameGUI;
-import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * @author Faizaan Datoo
@@ -14,7 +13,7 @@ public class EntityPlayer extends EntityBase {
 	PlayerInput input;
 
 	public EntityPlayer(GameGUI gui) {
-		super(AssetManager.getInstance().getTexture("koala"), 18, 26);
+		super("textures/player.txt");
 		this.input = new PlayerInput(gui, this);
 	}
 

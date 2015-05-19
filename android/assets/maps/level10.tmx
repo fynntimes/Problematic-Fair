@@ -8,17 +8,17 @@
    </properties>
   </tile>
  </tileset>
- <layer name="NO WALLS" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJzt0LENgCAURVEajQvYEPef0wmQSPyCeE5yKwoepAQAEGsv9FVLQOurLxhD6S9GcVxUO79Ty/1R5Qc2bJVaZYXUqvfuWWvVe/esAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBvJ00RIu4=
-  </data>
- </layer>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0ssKgzAQBdCAC6WlG/X/v1ULBiQwvoJFyjlwCckIyTCmBACwr13W95xhzueme5qT+3/TVtTLWvTtEOSrKdZ0cJ/P1onOr8ww6u2V4n5qE93fL/Wx8u157YL8Wu5rnbLHo//YlqjfvXAP83gW8wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA55gA2xYFAA==
+   eJzt0sEJwCAMAEAH6QT9Z//V+it9qK1YEfEOhKAxiiYlgHXFTzkjz99RVOIorPe8ZW5v6Q49vtaZ0ReR8u/7Z/2WuLVurg9qc6U6rXm8Ox5jlFF9u6Nz9gW4+QsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgLVdGoIHsw==
   </data>
  </layer>
  <objectgroup name="entities">
-  <object id="1" name="player" x="81" y="408"/>
+  <object id="1" name="player" x="216.803" y="333.091"/>
  </objectgroup>
+ <layer name="NO WALLS" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2EsKhDAQBUDPMXgCT+D9T+bGhQzJTPx3hyp4O8XQL0HIMAAAvRkTpwefnZkOvPNUtrJ2HrGPqTFRur/S23v6V9dnOpnX/PvmXEimPu7cl7U5X3VGvudd6qC1n7tE7aOllyNd1DqoPed8xPtXPNkHAACx9HSX14sI93Ctoq3nrCxzL8mwRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHjTArrBPTU=
+  </data>
+ </layer>
 </map>

@@ -53,8 +53,8 @@ public class LevelManager {
 				"maps/level" + id + ".tmx");
 		levels.add(new Level("level" + id));
 
-		// getLevel(id + 1).levelData.setUnlocked(true);
-		// getLevel(id + 1).save();
+		 getLevel(id + 1).levelData.setUnlocked(true);
+		 getLevel(id + 1).save();
 
 		return true;
 	}

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.tripointgames.problematic.level.LevelManager;
 import com.tripointgames.problematic.util.AssetManager;
+import com.tripointgames.problematic.util.MusicManager;
 import com.tripointgames.problematic.util.PreferencesManager;
 
 /**
@@ -18,11 +19,9 @@ import com.tripointgames.problematic.util.PreferencesManager;
  *
  */
 public class Main extends Game {
-
 	public LevelManager levelManager;
-
-	public boolean levelEditor = false;
-
+	public MusicManager musicManager;
+	
 	@Override
 	public void create() {
 		loadAssets();
@@ -30,7 +29,10 @@ public class Main extends Game {
 		// Load all levels into the game
 		levelManager = new LevelManager();
 		levelManager.loadLevels();
-
+		
+		// Load all background music
+		musicManager = new MusicManager();
+		
 		// Load the game preferences
 		try {
 			PreferencesManager.getInstance().loadPreferences();
@@ -46,9 +48,6 @@ public class Main extends Game {
 	}
 
 	private void loadAssets() {
-		// Load the game textures
-		AssetManager.getInstance().registerTexture("koala", "textures/koalio.png");
-
 		// Load game sounds
 		AssetManager.getInstance().registerSound("wrong-answer",
 				"sounds/wrong-answer.wav");
@@ -58,6 +57,11 @@ public class Main extends Game {
 				"sounds/player-death.wav");
 		AssetManager.getInstance().registerSound("button-click",
 				"sounds/button-click.wav");
+
+		// Load game music
+		AssetManager.getInstance().registerMusic("music0", "music/music0.mp3");
+		AssetManager.getInstance().registerMusic("music1", "music/music1.mp3");
+		AssetManager.getInstance().registerMusic("music2", "music/music2.mp3");
 
 		// Load the UI textures
 		AssetManager.getInstance().registerTexture("grassyJourney-logo",
@@ -72,10 +76,8 @@ public class Main extends Game {
 		AssetManager.getInstance().registerTexture("optionsButton",
 				"textures/options.png");
 		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
-		AssetManager.getInstance().registerTexture(
-				"problematicLogo",
-				levelEditor ? "textures/problematic-leveleditor.png"
-						: "textures/Problematic-2.png");
+		AssetManager.getInstance().registerTexture("problematicLogo",
+				"textures/Problematic-2.png");
 		AssetManager.getInstance().registerTexture("mathscreenBackground",
 				"textures/chalkboard.jpg");
 	}
@@ -92,6 +94,8 @@ public class Main extends Game {
 
 	@Override
 	public void dispose() {
+		// Dispose of background music
+		musicManager.dispose();
 		// Dispose of all levels on exit
 		levelManager.dispose();
 		// Dispose of all assets on exit

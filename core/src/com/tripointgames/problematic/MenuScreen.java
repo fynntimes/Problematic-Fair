@@ -2,9 +2,6 @@ package com.tripointgames.problematic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -12,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.tripointgames.problematic.level.Level;
 import com.tripointgames.problematic.util.AssetManager;
 
 /**
@@ -107,15 +103,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				AssetManager.getInstance().getSound("button-click").play();
-				if (gameInstance.levelEditor) {
-					TiledMap map = new TmxMapLoader(new AbsoluteFileHandleResolver())
-							.load(System.getProperty("user.dir") + "/level.tmx");
-					AssetManager.getInstance().registerAsset("levelEditor", map);
-					gameInstance.setScreen(new GameScreen(new Level("levelEditor"),
-							gameInstance));
-				} else {
-					gameInstance.setScreen(new LevelScreen(gameInstance));
-				}
+				gameInstance.setScreen(new LevelScreen(gameInstance));
 			}
 		});
 
@@ -138,7 +126,7 @@ public class MenuScreen implements Screen {
 				gameInstance.setScreen(new MathScreen(gameInstance));
 			}
 		});
-		
+
 		mainContainer.add(helpButton);
 	}
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.tripointgames.problematic.GameGUI;
+import com.tripointgames.problematic.Main;
 
 /**
  * Handles input from the game GUI movement buttons, and responds by moving the

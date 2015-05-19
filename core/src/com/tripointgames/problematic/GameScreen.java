@@ -1,6 +1,7 @@
 package com.tripointgames.problematic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -41,16 +42,23 @@ public class GameScreen implements Screen {
 		gui = new GameGUI();
 		player = new EntityPlayer(gui);
 
-		// Creates a camera which will show 10x5 units of the world.
+		// Creates a camera which will show 15x7 units of the world.
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 10, 5);
+		camera.setToOrtho(false, 15, 7);
 		camera.update();
 
 		level.prepare(camera, player, gameInstance);
+		
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
 	public void render(float delta) {
+		if(Gdx.input.isKeyPressed(Keys.BACK)) {
+			dispose();
+			gameInstance.setScreen(new LevelScreen(gameInstance));
+			return;
+		}
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		level.update(deltaTime);
 		level.render();

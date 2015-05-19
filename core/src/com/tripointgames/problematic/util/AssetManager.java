@@ -1,6 +1,7 @@
 package com.tripointgames.problematic.util;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -63,15 +64,8 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerTexture(String key, String internalPath) {
-		FileHandle handle = Gdx.files.internal(internalPath);
-		// Make sure the file exists before adding it.
-		if (!handle.exists()) {
-			System.err.println("Asset " + key
-					+ " was not found at the internal path " + internalPath
-					+ ". It will not be registered.");
-			return;
-		}
-		registerAsset(key, new Texture(handle));
+		FileHandle handle = getHandle(internalPath);
+		if (handle != null) registerAsset(key, new Texture(handle));
 	}
 
 	/**
@@ -83,15 +77,9 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerSound(String key, String internalPath) {
-		FileHandle handle = Gdx.files.internal(internalPath);
-		// Make sure the file exists before adding it.
-		if (!handle.exists()) {
-			System.err.println("Asset " + key
-					+ " was not found at the internal path " + internalPath
-					+ ". It will not be registered.");
-			return;
-		}
-		registerAsset(key, Gdx.audio.newSound(Gdx.files.internal(internalPath)));
+		FileHandle handle = getHandle(internalPath);
+		if (handle != null)
+			registerAsset(key, Gdx.audio.newSound(Gdx.files.internal(internalPath)));
 	}
 
 	/**
@@ -103,15 +91,22 @@ public class AssetManager {
 	 *            The path of the asset within the assets folder.
 	 */
 	public void registerMap(String key, String internalPath) {
-		FileHandle handle = Gdx.files.internal(internalPath);
-		// Make sure the file exists before adding it.
-		if (!handle.exists()) {
-			System.err.println("Asset " + key
-					+ " was not found at the internal path " + internalPath
-					+ ". It will not be registered.");
-			return;
-		}
-		registerAsset(key, new TmxMapLoader().load(internalPath));
+		FileHandle handle = getHandle(internalPath);
+		if (handle != null)
+			registerAsset(key, new TmxMapLoader().load(internalPath));
+	}
+
+	/**
+	 * Create a Music object and register it to the asset map.
+	 * 
+	 * @param key
+	 *            The asset's key.
+	 * @param internalPath
+	 *            The path of the asset within the assets folder.
+	 */
+	public void registerMusic(String key, String internalPath) {
+		FileHandle handle = getHandle(internalPath);
+		if (handle != null) registerAsset(key, Gdx.audio.newMusic(handle));
 	}
 
 	/**
@@ -176,6 +171,22 @@ public class AssetManager {
 	}
 
 	/**
+	 * Gets an asset from the map and casts it to a Music object.
+	 * 
+	 * @param key
+	 *            The asset's key.
+	 * @return The Music object you requested, or null if it could not be
+	 *         found or is not a Music object.
+	 */
+	public Music getMusic(String key) {
+		Object asset = assetMap.get(key);
+
+		if (!(asset instanceof Music) || asset == null) return null;
+		
+		return (Music) asset;
+	}
+
+	/**
 	 * Convert a Texture to a drawable Texture, which can be added to a UI
 	 * button.
 	 * 
@@ -207,6 +218,8 @@ public class AssetManager {
 			((Sound) asset).dispose();
 		} else if (asset instanceof TiledMap) {
 			((TiledMap) asset).dispose();
+		} else if(asset instanceof Music) {
+			((Music) asset).dispose();
 		}
 	}
 
@@ -217,6 +230,27 @@ public class AssetManager {
 		for (String key : assetMap.keys()) {
 			dispose(key);
 		}
+	}
+
+	/**
+	 * Gets a file from the internal path specified. If the file was not found,
+	 * this method will print an error message and return null.
+	 * 
+	 * @param internalPath
+	 *            The internal path (relative to the "assets/" folder) of this
+	 *            asset.
+	 * @return The FileHandle object if the file was found, or null if the file
+	 *         was not found.
+	 */
+	private FileHandle getHandle(String internalPath) {
+		FileHandle handle = Gdx.files.internal(internalPath);
+		// Make sure the file exists before adding it.
+		if (!handle.exists()) {
+			System.err.println("No asset was found at the internal path "
+					+ internalPath + ". It will not be registered.");
+			return null;
+		}
+		return handle;
 	}
 
 }

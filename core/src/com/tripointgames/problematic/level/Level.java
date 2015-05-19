@@ -126,12 +126,14 @@ public class Level {
 	private void adjustCamera() {
 		// Stop the camera if it goes off the map so the player does not see
 		// past the edge.
-		if (camera.position.x < 5) {
-			camera.position.x = 5;
+		if (camera.position.x < 8) {
+			camera.position.x = 8;
 		}
+
 		if (camera.position.x > getMapWidth()) {
 			camera.position.x = getMapWidth();
 		}
+		
 	}
 
 }

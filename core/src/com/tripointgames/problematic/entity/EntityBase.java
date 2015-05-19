@@ -1,10 +1,9 @@
 package com.tripointgames.problematic.entity;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
@@ -21,7 +20,7 @@ import com.tripointgames.problematic.GameScreen;
  */
 public abstract class EntityBase {
 
-	protected Texture spritesheet;
+	protected TextureAtlas textureAtlas;
 	protected float width, height;
 	protected Animation standing, walking, jumping;
 
@@ -49,21 +48,37 @@ public abstract class EntityBase {
 		}
 	};
 
-	protected EntityBase(Texture spritesheet, int individualWidth,
-			int individualHeight) {
-		this.spritesheet = spritesheet;
+	protected EntityBase(String textureAtlasLocation) {
+		createAnimations(textureAtlasLocation);
+	}
+
+	/**
+	 * Create the animations used by this entity. May be overridden if this
+	 * entity does not have all 3 animations (jumping, walking, and standing).
+	 * 
+	 * @param spritesheet
+	 * @param spriteWidth
+	 * @param spriteHeight
+	 */
+	protected void createAnimations(String textureAtlasLocation) {
+		// Load the texture atlas from the texture atlas file
+		this.textureAtlas = new TextureAtlas(
+				Gdx.files.internal(textureAtlasLocation));
 
 		// Initialize the animations for this entity
-		TextureRegion[] individualTextures = TextureRegion.split(spritesheet,
-				individualWidth, individualHeight)[0];
-		standing = new Animation(0, individualTextures[0]);
-		jumping = new Animation(0, individualTextures[1]);
-		walking = new Animation(0.15f, individualTextures[2], individualTextures[3],
-				individualTextures[4]);
+		standing = new Animation(0, textureAtlas.findRegion("standing"));
+		jumping = new Animation(0, textureAtlas.findRegion("jumping"));
+		walking = new Animation(0.15f, textureAtlas.findRegion("walking1"),
+				textureAtlas.findRegion("walking2"),
+				textureAtlas.findRegion("walking3"));
 		walking.setPlayMode(PlayMode.LOOP_PINGPONG);
 
-		this.width = GameScreen.UNIT_SCALE * individualTextures[0].getRegionWidth();
-		this.height = GameScreen.UNIT_SCALE * individualTextures[0].getRegionHeight();
+		// Get the width of this entity
+		this.width = GameScreen.UNIT_SCALE
+				* textureAtlas.findRegion("standing").getRegionWidth();
+		this.height = GameScreen.UNIT_SCALE
+				* textureAtlas.findRegion("standing").getRegionHeight();
+
 	}
 
 	public void update(float deltaTime, TiledMap currentMap) {
@@ -236,7 +251,7 @@ public abstract class EntityBase {
 	}
 
 	public void dispose() {
-		this.spritesheet.dispose();
+		this.textureAtlas.dispose();
 	}
 
 }
