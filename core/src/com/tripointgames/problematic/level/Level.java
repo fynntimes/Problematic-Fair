@@ -32,6 +32,8 @@ public class Level {
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
 
+	public float yBottom; // The bottom of the map, for camera positioning
+
 	// TODO Make constructor local (after removal of level editor)
 	/**
 	 * This constructor is to be used only in the LevelManager class. GameScreen
@@ -57,6 +59,15 @@ public class Level {
 		this.camera = camera;
 		this.player = player;
 		this.gameInstance = gameInstance;
+
+		// Get the ybottom from the map
+		// TODO This is temporary until all maps have a "bottom" object.
+		if (map.getLayers().get("entities").getObjects().get("bottom") == null) this.yBottom = 93;
+		else this.yBottom = map.getLayers().get("entities").getObjects()
+				.get("bottom").getProperties().get("y", Float.class)
+				* GameScreen.UNIT_SCALE;
+		this.camera.position.y = this.yBottom;
+
 		// Get the player spawn position from the map
 		MapProperties playerProperties = map.getLayers().get("entities").getObjects()
 				.get("player").getProperties();
@@ -73,6 +84,8 @@ public class Level {
 	}
 
 	public void update(float delta) {
+		// If the game is frozen, don't update or this will cause glitching
+		if(delta == 0) return;
 		// Update the player
 		player.update(delta, this.map);
 
@@ -130,10 +143,10 @@ public class Level {
 			camera.position.x = 8;
 		}
 
-		if (camera.position.x > getMapWidth()) {
-			camera.position.x = getMapWidth();
+		if (camera.position.x > getMapWidth() - 8) {
+			camera.position.x = getMapWidth() - 8;
 		}
-		
+
 	}
 
 }

@@ -10,7 +10,7 @@ import com.tripointgames.problematic.GameGUI;
  */
 public class EntityPlayer extends EntityBase {
 
-	PlayerInput input;
+	public PlayerInput input;
 
 	public EntityPlayer(GameGUI gui) {
 		super("textures/player.txt");

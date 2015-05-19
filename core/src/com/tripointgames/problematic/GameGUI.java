@@ -28,6 +28,8 @@ public class GameGUI {
 	public int jumpButtonLeftX;
 	public int jumpButtonRightX;
 	public int jumpButtonY;
+	private TextureRegion pauseButton;
+	public int pauseButtonX, pauseButtonY;
 
 	public GameGUI() {
 		batch = new SpriteBatch();
@@ -44,13 +46,13 @@ public class GameGUI {
 				Gdx.files.internal("textures/HudSprites.png")), GRID_WIDTH + 1, 0,
 				GRID_WIDTH, GRID_HEIGHT);
 
-		// Jump button
-		jumpButton = new TextureRegion(new Texture(
-				Gdx.files.internal("textures/HudSprites.png")), (GRID_WIDTH * 2) + 1,
-				0, GRID_WIDTH, GRID_HEIGHT);
-
 		// Tablet jump button
 		jumpButton = new TextureRegion(new Texture(
+				Gdx.files.internal("textures/HudSprites.png")), 0, GRID_HEIGHT + 1,
+				GRID_WIDTH, GRID_HEIGHT);
+
+		// Pause button
+		pauseButton = new TextureRegion(new Texture(
 				Gdx.files.internal("textures/HudSprites.png")), 0, GRID_HEIGHT + 1,
 				GRID_WIDTH, GRID_HEIGHT);
 
@@ -63,6 +65,9 @@ public class GameGUI {
 		jumpButtonLeftX = 0;
 		jumpButtonRightX = Gdx.graphics.getWidth() - GRID_WIDTH;
 		jumpButtonY = Gdx.graphics.getHeight() - (GRID_HEIGHT * 2);
+		
+		pauseButtonX = 0;
+		pauseButtonY = Gdx.graphics.getHeight() - GRID_HEIGHT;
 
 	}
 
@@ -79,6 +84,8 @@ public class GameGUI {
 		batch.draw(jumpButton, jumpButtonLeftX, 0);
 		batch.draw(jumpButton, jumpButtonRightX, 0);
 
+		batch.draw(pauseButton, pauseButtonX, pauseButtonY);
+		
 		batch.end();
 	}
 

@@ -23,12 +23,14 @@ public class GameScreen implements Screen {
 												// this value every frame
 
 	private Main gameInstance;
-	
-	private EntityPlayer player;
-	private OrthographicCamera camera;
-	private Level level;
-	private GameGUI gui;
-	
+
+	public EntityPlayer player;
+	public OrthographicCamera camera;
+	public Level level;
+	public GameGUI gui;
+
+	private PauseOverlayScreen pauseScreen;
+
 	private SpriteBatch fontBatch = new SpriteBatch();
 	private BitmapFont font = new BitmapFont();
 
@@ -48,28 +50,50 @@ public class GameScreen implements Screen {
 		camera.update();
 
 		level.prepare(camera, player, gameInstance);
-		
+
 		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
 	public void render(float delta) {
-		if(Gdx.input.isKeyPressed(Keys.BACK)) {
+		if (Gdx.input.isKeyPressed(Keys.BACK)) {
 			dispose();
 			gameInstance.setScreen(new LevelScreen(gameInstance));
 			return;
 		}
 		float deltaTime = Gdx.graphics.getDeltaTime();
-		level.update(deltaTime);
+		if (!player.input.paused) level.update(deltaTime);
 		level.render();
 
 		gui.render();
-		
+
 		// Debug text
 		fontBatch.begin();
-		font.draw(fontBatch, "X: " + player.position.x + ", Y: " + player.position.y
-				+ ", CamX: " + camera.position.x+ ", CamY: " + camera.position.y + ", OnGround? " + player.onGround, 0, 20);
+		font.draw(fontBatch,
+				"X: " + player.position.x + ", Y: " + player.position.y + ", CamX: "
+						+ camera.position.x + ", CamY: " + camera.position.y
+						+ ", MaxX: " + level.getMapWidth() + ", OnGround? "
+						+ player.onGround + ", Paused? " + player.input.paused, 0, 20);
 		fontBatch.end();
+
+		if (player.input.paused) {
+			pauseGame();
+		} else {
+			unpauseGame();
+		}
+	}
+
+	private void pauseGame() {
+		if (pauseScreen == null)
+			pauseScreen = new PauseOverlayScreen(gameInstance, this);
+		pauseScreen.render();
+	}
+
+	private void unpauseGame() {
+		if (pauseScreen != null) {
+			pauseScreen.dispose();
+			pauseScreen = null;
+		}
 	}
 
 	/*

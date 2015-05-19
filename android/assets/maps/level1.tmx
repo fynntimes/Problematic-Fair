@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="2">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="3">
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="tileset.png" width="1658" height="218"/>
   <tile id="2">
@@ -8,17 +8,18 @@
    </properties>
   </tile>
  </tileset>
+ <layer name="NO WALLS" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztybEJACAMAMEsYSPZf04nUCsDkTv46iMAAOBf4xK1ctPp6V1TkpoEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUG0Be84p9Q==
+  </data>
+ </layer>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt0rEKgCAUBVChoSFaqv//1holnoll1HAOSNENvS9KCQCgbshWKlyj/Jzlz780VvJormjG6P5pl1q3Wv7EdKz1tOYsX4J8K+xV6tnSv+esa6dz3vz+vUVdr/q3vn9HtF/+PwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwB/so7YBzQ==
+   eJzt0rsKhDAQBdCAhcVis/r/36qNsAyTRBcVi3Ng8HEnJAMpBQCgb/ipUnlmecyy/I2yubIZatkZ362W5L3Xe4fPVnOoKewf89p5xvC9r836Y2/v/9WO7NM6/1tlc7VmPdv/j+wO9e4SAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8bQV6uALc
   </data>
  </layer>
  <objectgroup name="entities">
   <object id="1" name="player" x="81" y="408"/>
+  <object id="2" name="bottom" x="8" y="827"/>
  </objectgroup>
- <layer name="NO WALLS" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJztybEJAAAIwDAP8f873UXcdEqgUyMAAAD+ZGt7ug0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgFkB5nMKgQ==
-  </data>
- </layer>
 </map>

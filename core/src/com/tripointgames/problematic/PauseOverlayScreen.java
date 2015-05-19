@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * The pause screen will be rendered on top of the game screen, which is why it
@@ -26,20 +29,44 @@ public class PauseOverlayScreen {
 	Skin skin;
 	Table mainContainer;
 
-	public PauseOverlayScreen(Main gameInstance) {
+	// Params are final because of the inner classes
+	public PauseOverlayScreen(final Main gameInstance, final GameScreen screen) {
 		this.gameInstance = gameInstance;
 
+		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
+		
 		initUISkin();
 
 		// Lay out the UI
 		mainContainer = new Table(skin);
 		mainContainer.setFillParent(true); // Fill the whole screen
 		stage.addActor(mainContainer);
-		
+
 		TextButton backToGameButton = new TextButton("Back to Game", skin);
-		mainContainer.add(backToGameButton).row();
-		
+
+		backToGameButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AssetManager.getInstance().getSound("button-click").play();
+				screen.player.input.paused = false;
+			}
+		});
+
+		mainContainer.add(backToGameButton).padBottom(20).row();
+
 		TextButton toMainMenuButton = new TextButton("Main Menu", skin);
+
+		toMainMenuButton.addListener(new ChangeListener() {
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				AssetManager.getInstance().getSound("button-click").play();
+				dispose();
+				screen.dispose();
+				gameInstance.setScreen(new MenuScreen(gameInstance));
+			}
+		});
+
 		mainContainer.add(toMainMenuButton);
 	}
 

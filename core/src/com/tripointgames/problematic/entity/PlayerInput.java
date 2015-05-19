@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.tripointgames.problematic.GameGUI;
-import com.tripointgames.problematic.Main;
+import com.tripointgames.problematic.util.AssetManager;
 
 /**
  * Handles input from the game GUI movement buttons, and responds by moving the
@@ -22,12 +22,11 @@ public class PlayerInput implements InputProcessor {
 	private boolean right = false;
 	private boolean jump = false;
 
+	public boolean paused = false;
+
 	public PlayerInput(GameGUI gui, EntityPlayer player) {
 		this.gui = gui;
 		this.player = player;
-
-		// Allow this class to take in input
-		Gdx.input.setInputProcessor(this);
 	}
 
 	/**
@@ -37,6 +36,9 @@ public class PlayerInput implements InputProcessor {
 		if (left) player.left();
 		if (right) player.right();
 		if (jump) player.jump();
+
+		// Ensure this class can take in input
+		Gdx.input.setInputProcessor(this);
 	}
 
 	/**
@@ -131,6 +133,12 @@ public class PlayerInput implements InputProcessor {
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 		// Check which button was pressed.
 
+		// Pause button
+		if (isButtonTouched(screenX, screenY, 0, -128)) {
+			AssetManager.getInstance().getSound("button-click").play();
+			paused = true;
+		}
+
 		if (isButtonTouched(screenX, screenY, gui.leftButtonX, gui.leftButtonY)) {
 			left = true;
 		}
@@ -143,7 +151,6 @@ public class PlayerInput implements InputProcessor {
 						gui.jumpButtonY)) {
 			jump = true;
 		}
-
 		return false;
 	}
 
