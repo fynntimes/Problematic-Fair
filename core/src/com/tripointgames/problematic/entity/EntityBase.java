@@ -1,7 +1,6 @@
 package com.tripointgames.problematic.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -29,6 +28,7 @@ public abstract class EntityBase {
 	protected float maxVelocity = 5f;
 	protected float jumpVelocity = 20f;
 	protected float movementDamper = 0.87f;
+	protected boolean affectedByPhysics = true;
 
 	protected EntityState state = EntityState.Standing;
 	protected float stateTime = 0; // Stores animation frame
@@ -62,8 +62,7 @@ public abstract class EntityBase {
 	 */
 	protected void createAnimations(String textureAtlasLocation) {
 		// Load the texture atlas from the texture atlas file
-		this.textureAtlas = new TextureAtlas(
-				Gdx.files.internal(textureAtlasLocation));
+		this.textureAtlas = new TextureAtlas(Gdx.files.internal(textureAtlasLocation));
 
 		// Initialize the animations for this entity
 		standing = new Animation(0, textureAtlas.findRegion("standing"));
@@ -85,6 +84,9 @@ public abstract class EntityBase {
 		stateTime += deltaTime;
 
 		handleInput();
+
+		// If the entity does not respond to physics, don't update it
+		if (!affectedByPhysics) return;
 
 		// Apply gravity
 		velocity.add(0, GameScreen.GRAVITY);
@@ -156,7 +158,7 @@ public abstract class EntityBase {
 		rectanglePool.free(entityBoundingBox);
 	}
 
-	private Rectangle getBoundingBox() {
+	public Rectangle getBoundingBox() {
 		// Create a bounding box around the entity
 		Rectangle entityBoundingBox = rectanglePool.obtain();
 		entityBoundingBox.set(position.x, position.y, width, height);

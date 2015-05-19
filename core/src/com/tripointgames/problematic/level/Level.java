@@ -6,11 +6,14 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.tripointgames.problematic.GameScreen;
 import com.tripointgames.problematic.Main;
 import com.tripointgames.problematic.MathScreen;
+import com.tripointgames.problematic.entity.EntityKey;
 import com.tripointgames.problematic.entity.EntityPlayer;
 import com.tripointgames.problematic.util.AssetManager;
 
@@ -22,12 +25,15 @@ import com.tripointgames.problematic.util.AssetManager;
 public class Level {
 
 	private Main gameInstance;
+	private GameScreen gameScreen;
 
 	public String levelAssetKey;
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private EntityPlayer player;
+
+	public EntityKey key;
 
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
@@ -55,10 +61,11 @@ public class Level {
 	 * up the level so it is ready to be rendered.
 	 */
 	public void prepare(OrthographicCamera camera, EntityPlayer player,
-			Main gameInstance) {
+			Main gameInstance, GameScreen gameScreen) {
 		this.camera = camera;
 		this.player = player;
 		this.gameInstance = gameInstance;
+		this.gameScreen = gameScreen;
 
 		// Get the ybottom from the map
 		// TODO This is temporary until all maps have a "bottom" object.
@@ -67,6 +74,19 @@ public class Level {
 				.get("bottom").getProperties().get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
 		this.camera.position.y = this.yBottom;
+
+		// Get the key location from the map.
+		this.key = new EntityKey();
+		if (map.getLayers().get("entities").getObjects().get("key") == null) this.key.position = Vector2.Zero;
+		else {
+			MapProperties playerProperties = map.getLayers().get("entities").getObjects()
+					.get("key").getProperties();
+			float keySpawnX = playerProperties.get("x", Float.class)
+					* GameScreen.UNIT_SCALE;
+			float keySpawnY = playerProperties.get("y", Float.class)
+					* GameScreen.UNIT_SCALE;
+			this.key.position.set(keySpawnX, keySpawnY);
+		}
 
 		// Get the player spawn position from the map
 		MapProperties playerProperties = map.getLayers().get("entities").getObjects()
@@ -85,7 +105,7 @@ public class Level {
 
 	public void update(float delta) {
 		// If the game is frozen, don't update or this will cause glitching
-		if(delta == 0) return;
+		if (delta == 0) return;
 		// Update the player
 		player.update(delta, this.map);
 
@@ -97,6 +117,14 @@ public class Level {
 			return;
 		}
 
+		Rectangle playerRect = player.getBoundingBox();
+		Rectangle keyRect = key.getBoundingBox();
+		if(playerRect.overlaps(keyRect)) {
+			this.gameScreen.dispose();
+			this.gameInstance.levelManager.incrementLevel();
+			this.gameInstance.setScreen(new GameScreen(gameInstance));
+		}
+		
 		// Make the camera follow the player
 		camera.position.x = player.position.x;
 		adjustCamera();
@@ -111,6 +139,9 @@ public class Level {
 
 		// Render the player
 		player.render(renderer.getBatch());
+		
+		// Render the key
+		key.render(renderer.getBatch());
 	}
 
 	public void loadData() {

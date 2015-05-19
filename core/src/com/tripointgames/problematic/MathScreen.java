@@ -177,8 +177,7 @@ public class MathScreen implements Screen {
 				// Play sound effect
 				AssetManager.getInstance().getSound("correct-answer").play();
 				// Return to the level
-				gameInstance.setScreen(new GameScreen(gameInstance.levelManager
-						.getCurrentLevel(), gameInstance));
+				gameInstance.setScreen(new GameScreen(gameInstance));
 			} else {
 				// Change the UI to indicate that it was the wrong answer
 				directionsLabel.setText("Uh oh! Try again.");

@@ -198,9 +198,8 @@ public class LevelScreen implements Screen {
 					AssetManager.getInstance().getSound("button-click").play();
 					gameInstance.levelManager
 							.setCurrentLevel(gameInstance.levelManager
-									.getLevel(levelId));
-					gameInstance.setScreen(new GameScreen(gameInstance.levelManager
-							.getLevel(levelId), gameInstance));
+									.getLevel(levelId), levelId);
+					gameInstance.setScreen(new GameScreen(gameInstance));
 				}
 			}
 		}

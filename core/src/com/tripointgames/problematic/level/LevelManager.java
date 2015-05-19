@@ -15,6 +15,7 @@ public class LevelManager {
 	private Array<Level> levels;
 
 	private Level currentLevel = null;
+	private int currentLevelID = 0;
 
 	public LevelManager() {
 		levels = new Array<Level>();
@@ -53,8 +54,8 @@ public class LevelManager {
 				"maps/level" + id + ".tmx");
 		levels.add(new Level("level" + id));
 
-		 getLevel(id + 1).levelData.setUnlocked(true);
-		 getLevel(id + 1).save();
+		getLevel(id + 1).levelData.setUnlocked(true);
+		getLevel(id + 1).save();
 
 		return true;
 	}
@@ -100,9 +101,20 @@ public class LevelManager {
 	 * @param currentLevel
 	 *            The level to set as current, or null if the game has exited
 	 *            the GameScreen.
+	 * @param id
+	 *            The ID of the level to set as current.
 	 */
-	public void setCurrentLevel(Level currentLevel) {
+	public void setCurrentLevel(Level currentLevel, int id) {
 		this.currentLevel = currentLevel;
+		this.currentLevelID = id;
+	}
+
+	/**
+	 * Change the level to the next one.
+	 */
+	public void incrementLevel() {
+		this.currentLevelID++;
+		this.currentLevel = getLevel(currentLevelID);
 	}
 
 	/**

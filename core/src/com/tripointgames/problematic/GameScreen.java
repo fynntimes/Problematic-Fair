@@ -34,8 +34,7 @@ public class GameScreen implements Screen {
 	private SpriteBatch fontBatch = new SpriteBatch();
 	private BitmapFont font = new BitmapFont();
 
-	public GameScreen(Level level, Main gameInstance) {
-		this.level = level;
+	public GameScreen(Main gameInstance) {
 		this.gameInstance = gameInstance;
 	}
 
@@ -49,7 +48,8 @@ public class GameScreen implements Screen {
 		camera.setToOrtho(false, 15, 7);
 		camera.update();
 
-		level.prepare(camera, player, gameInstance);
+		level = gameInstance.levelManager.getCurrentLevel();
+		level.prepare(camera, player, gameInstance, this);
 
 		Gdx.input.setCatchBackKey(true);
 	}
