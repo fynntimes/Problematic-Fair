@@ -3,6 +3,8 @@ package com.tripointgames.problematic.level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -24,6 +26,7 @@ import com.tripointgames.problematic.util.AssetManager;
  */
 public class Level {
 
+
 	private Main gameInstance;
 	private GameScreen gameScreen;
 
@@ -38,7 +41,8 @@ public class Level {
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
 
-	public float yBottom; // The bottom of the map, for camera positioning
+	private float yBottom; // The bottom of the map, for camera positioning
+	private float mapEnd; // The end of the map, for camera positioning
 
 	// TODO Make constructor local (after removal of level editor)
 	/**
@@ -67,20 +71,39 @@ public class Level {
 		this.gameInstance = gameInstance;
 		this.gameScreen = gameScreen;
 
+		loadObjects();
+		// Set player position to the spawn point
+
+		player.position.set(playerSpawnX, playerSpawnY);
+		camera.position.x = player.position.x;
+		camera.position.y = player.position.y + 0.5f;
+		camera.update();
+	}
+
+	/**
+	 * Load all the objects from the "entities" layer in the map.
+	 */
+	private void loadObjects() {
+		// Get the entities layer from the map
+		MapLayer entitiesLayer = map.getLayers().get("entities");
+		MapObjects entitiesObjects = entitiesLayer.getObjects();
+
 		// Get the ybottom from the map
 		// TODO This is temporary until all maps have a "bottom" object.
-		if (map.getLayers().get("entities").getObjects().get("bottom") == null) this.yBottom = 93;
-		else this.yBottom = map.getLayers().get("entities").getObjects()
+		if (entitiesObjects.get("bottom") == null) this.yBottom = 93;
+		else this.yBottom = entitiesLayer
 				.get("bottom").getProperties().get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
 		this.camera.position.y = this.yBottom;
 
+		// Get the end of the map, which indicates where the camera should stop moving.
+		this.mapEnd = entities.get("end").getProperties().get("x", Float.class) * GameScreen.UNIT_SCALE;
+
 		// Get the key location from the map.
 		this.key = new EntityKey();
-		if (map.getLayers().get("entities").getObjects().get("key") == null) this.key.position = Vector2.Zero;
+		if (entitiesObjects.get("key") == null) this.key.position = Vector2.Zero;
 		else {
-			MapProperties playerProperties = map.getLayers().get("entities").getObjects()
-					.get("key").getProperties();
+			MapProperties playerProperties = entitiesObjects.get("key").getProperties();
 			float keySpawnX = playerProperties.get("x", Float.class)
 					* GameScreen.UNIT_SCALE;
 			float keySpawnY = playerProperties.get("y", Float.class)
@@ -89,18 +112,11 @@ public class Level {
 		}
 
 		// Get the player spawn position from the map
-		MapProperties playerProperties = map.getLayers().get("entities").getObjects()
-				.get("player").getProperties();
+		MapProperties playerProperties = entitiesObjects.get("player").getProperties();
 		float playerSpawnX = playerProperties.get("x", Float.class)
 				* GameScreen.UNIT_SCALE;
 		float playerSpawnY = playerProperties.get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
-
-		// Set player position to the spawn point
-		player.position.set(playerSpawnX, playerSpawnY);
-		camera.position.x = player.position.x;
-		camera.position.y = player.position.y + 0.5f;
-		camera.update();
 	}
 
 	public void update(float delta) {
@@ -117,18 +133,11 @@ public class Level {
 			return;
 		}
 
-		Rectangle playerRect = player.getBoundingBox();
-		Rectangle keyRect = key.getBoundingBox();
-		if(playerRect.overlaps(keyRect)) {
-			this.gameScreen.dispose();
-			this.gameInstance.levelManager.incrementLevel();
-			this.gameInstance.setScreen(new GameScreen(gameInstance));
-		}
-		
+		// Check if the player got the key
+		checkForKeyCollision();
+
 		// Make the camera follow the player
-		camera.position.x = player.position.x;
 		adjustCamera();
-		camera.update();
 
 	}
 
@@ -167,6 +176,17 @@ public class Level {
 		return map.getProperties().get("width", Integer.class);
 	}
 
+	public int getMapEnd() {
+		return this.mapEnd;
+	}
+
+	public int getMapBottom() {
+		return this.yBottom;
+	}
+
+	/**
+	 * Adjust the camera position to follow the player.
+	 */
 	private void adjustCamera() {
 		// Stop the camera if it goes off the map so the player does not see
 		// past the edge.
@@ -174,10 +194,26 @@ public class Level {
 			camera.position.x = 8;
 		}
 
-		if (camera.position.x > getMapWidth() - 8) {
-			camera.position.x = getMapWidth() - 8;
+		float stopOffset = 8; // Make the camera stop 8 units before the end.
+		if (camera.position.x > this.mapEnd - stopOffset) {
+			camera.position.x = this.mapEnd - stopOffset;
 		}
 
+		camera.position.x = player.position.x;
+		camera.update();
+	}
+
+	/**
+	 * Check to see if the player collided with the key, and go to the next level.
+	 */
+	private void checkForKeyCollision() {
+		Rectangle playerRect = player.getBoundingBox();
+		Rectangle keyRect = key.getBoundingBox();
+		if(playerRect.overlaps(keyRect)) {
+			this.gameScreen.dispose();
+			this.gameInstance.levelManager.incrementLevel();
+			this.gameInstance.setScreen(new GameScreen(gameInstance));
+		}
 	}
 
 }
