@@ -63,7 +63,10 @@ public class MenuScreen implements Screen {
 				.convertTextureToDrawable("menuBackground"));
 		mainContainer.setFillParent(true);
 	}
-
+	
+	/**
+	 * Add the logo and center it across the screen.
+	 */
 	private void addLogo() {
 		Image problematicLogo = new Image(AssetManager.getInstance()
 				.convertTextureToDrawable("problematicLogo"));

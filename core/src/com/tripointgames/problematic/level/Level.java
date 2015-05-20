@@ -9,7 +9,6 @@ import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.tripointgames.problematic.GameScreen;
@@ -30,13 +29,13 @@ public class Level {
 	private Main gameInstance;
 	private GameScreen gameScreen;
 
-	public String levelAssetKey;
+	public String levelAssetKey; // Assigned to this level in AssetManager
+
 	private TiledMap map;
 	private OrthogonalTiledMapRenderer renderer;
 	private OrthographicCamera camera;
 	private EntityPlayer player;
-
-	public EntityKey key;
+	private EntityKey key;
 
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
@@ -88,6 +87,16 @@ public class Level {
 		MapLayer entitiesLayer = map.getLayers().get("entities");
 		MapObjects entitiesObjects = entitiesLayer.getObjects();
 
+		loadMapData(entitiesObjects);
+		loadMapEntities(entitiesObjects);
+
+	}
+
+	/**
+	 * Load data from the map.
+	 * @param entitiesObjects The objects on the entities layer
+	 */
+	private void loadMapData(MapObjects entitiesObjects) {
 		// Get the ybottom from the map
 		this.yBottom = entitiesObjects.get("bottom").getProperties()
 				.get("y", Float.class)
@@ -99,19 +108,19 @@ public class Level {
 		this.mapEnd = entitiesObjects.get("end").getProperties()
 				.get("x", Float.class)
 				* GameScreen.UNIT_SCALE;
+	}
 
+	/**
+	 * Load entities from the map.
+	 * @param entitiesObjects The objects on the entities layer
+	 */
+	private void loadMapEntities(MapObjects entitiesObjects) {
 		// Get the key location from the map.
 		this.key = new EntityKey();
-		if (entitiesObjects.get("key") == null) this.key.position = Vector2.Zero;
-		else {
-			MapProperties playerProperties = entitiesObjects.get("key")
-					.getProperties();
-			float keySpawnX = playerProperties.get("x", Float.class)
-					* GameScreen.UNIT_SCALE;
-			float keySpawnY = playerProperties.get("y", Float.class)
-					* GameScreen.UNIT_SCALE;
-			this.key.position.set(keySpawnX, keySpawnY);
-		}
+		MapProperties keyProperties = entitiesObjects.get("key").getProperties();
+		float keySpawnX = keyProperties.get("x", Float.class) * GameScreen.UNIT_SCALE;
+		float keySpawnY = keyProperties.get("y", Float.class) * GameScreen.UNIT_SCALE;
+		this.key.position.set(keySpawnX, keySpawnY);
 
 		// Get the player spawn position from the map
 		MapProperties playerProperties = entitiesObjects.get("player")
@@ -120,9 +129,12 @@ public class Level {
 				* GameScreen.UNIT_SCALE;
 		this.playerSpawnY = playerProperties.get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
-
 	}
 
+	/**
+	 * Update all entities and the level.
+	 * @param delta Used to calculate how much to update.
+	 */
 	public void update(float delta) {
 		// If the game is frozen, don't update or this will cause glitching
 		if (delta == 0) return;
@@ -160,7 +172,10 @@ public class Level {
 		// Render the key
 		key.render(renderer.getBatch());
 	}
-
+	
+	/**
+	 * Load data about this map
+	 */
 	public void loadData() {
 		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey + ".json");
 		if (!levelHandle.exists()) save(); // Create the LevelData file.
@@ -168,11 +183,17 @@ public class Level {
 		this.levelData = json.fromJson(LevelData.class, levelHandle);
 	}
 
+	/**
+	 * Save the data about this map
+	 */
 	public void save() {
 		FileHandle levelHandle = Gdx.files.local("levels/" + levelAssetKey + ".json");
 		levelHandle.writeString(json.toJson(levelData), false);
 	}
 
+	/**
+	 * Dispose of all resources this map may be using.
+	 */
 	public void dispose() {
 		// Dispose of all resources to free memory
 		map.dispose();

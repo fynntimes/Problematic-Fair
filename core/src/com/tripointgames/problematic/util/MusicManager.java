@@ -16,7 +16,7 @@ public class MusicManager {
 	private Music currentMusic = null;
 	private int currentId = -1;
 	private float volume = 0.1f;
-	
+
 	public MusicManager() {
 		musics = new Array<Music>();
 		registerMusic();
@@ -37,7 +37,7 @@ public class MusicManager {
 		musics.add(AssetManager.getInstance().getMusic("music1"));
 		musics.add(AssetManager.getInstance().getMusic("music2"));
 	}
-	
+
 	/**
 	 * Stop all playing music.
 	 */
@@ -46,6 +46,9 @@ public class MusicManager {
 		musics.clear();
 	}
 
+	/**
+	 * Get the next track from the music list.
+	 */
 	private void getNextTrack() {
 		currentId++;
 		if (currentId > musics.size - 1) currentId = 0;

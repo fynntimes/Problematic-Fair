@@ -13,15 +13,23 @@ public enum Difficulty {
 	int id;
 	int maxNumberValue;
 
+	/**
+	 * @param id
+	 *            The ID of this difficulty value, used by the slider in
+	 *            OptionsScreen
+	 * @param maxNumberValue
+	 *            The max random number that can be generated in MathProblem
+	 *            (The higher the number the harder the problem.)
+	 */
 	Difficulty(int id, int maxNumberValue) {
 		this.id = id;
 		this.maxNumberValue = maxNumberValue;
 	}
-	
+
 	public int getId() {
 		return this.id;
 	}
-	
+
 	public int getMaxNumberValue() {
 		return maxNumberValue;
 	}

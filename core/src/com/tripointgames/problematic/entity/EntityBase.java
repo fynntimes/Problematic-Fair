@@ -19,10 +19,7 @@ import com.tripointgames.problematic.GameScreen;
  */
 public abstract class EntityBase {
 
-	protected TextureAtlas textureAtlas;
-	protected float width, height;
-	protected Animation standing, walking, jumping;
-
+	// Position and velocity variables
 	public Vector2 position = new Vector2();
 	public Vector2 velocity = new Vector2();
 	protected float maxVelocity = 5f;
@@ -30,6 +27,10 @@ public abstract class EntityBase {
 	protected float movementDamper = 0.87f;
 	protected boolean affectedByPhysics = true;
 
+	// Graphics variables
+	protected TextureAtlas textureAtlas;
+	protected float width, height;
+	protected Animation standing, walking, jumping;
 	protected EntityState state = EntityState.Standing;
 	protected float stateTime = 0; // Stores animation frame
 	protected boolean facingRight = true; // Flips the texture
@@ -80,6 +81,11 @@ public abstract class EntityBase {
 
 	}
 
+	/**
+	 * Update this entity's position and collision detection.
+	 * @param deltaTime Used to figure out how much to move in this frame
+	 * @param currentMap The map this entity is currently on
+	 */
 	public void update(float deltaTime, TiledMap currentMap) {
 		stateTime += deltaTime;
 
@@ -122,6 +128,10 @@ public abstract class EntityBase {
 	protected void handleInput() {
 	}
 
+	/**
+	 * Check for collision detection both horizontally and vertically.
+	 * @param currentMap The map this entity is currently on.
+	 */
 	private void checkCollisionDetection(TiledMap currentMap) {
 		// Create a bounding box surrounding this entity
 		Rectangle entityBoundingBox = getBoundingBox();
@@ -158,6 +168,10 @@ public abstract class EntityBase {
 		rectanglePool.free(entityBoundingBox);
 	}
 
+	/**
+	 * Get the bounding box from this entity.
+	 * @return The bounding box as a Rectangle.
+	 */
 	public Rectangle getBoundingBox() {
 		// Create a bounding box around the entity
 		Rectangle entityBoundingBox = rectanglePool.obtain();
@@ -165,6 +179,11 @@ public abstract class EntityBase {
 		return entityBoundingBox;
 	}
 
+	/**
+	 * Check if there is a tile in front of or behind the entity and adjust accordingly.
+	 * @param boundingBox The bounding box of this entity
+	 * @param tiles The tiles to check
+	 */
 	private void handleHorizontalCollision(Rectangle boundingBox,
 			Array<Rectangle> tiles) {
 		// Grow the bounding box by the velocity of the entity to check for
@@ -178,6 +197,11 @@ public abstract class EntityBase {
 		}
 	}
 
+	/**
+	 * Check if there is a tile above or below the entity and adjust accordingly.
+	 * @param boundingBox The bounding box of this entity
+	 * @param tiles The tiles to check
+	 */
 	private void handleVerticalCollision(Rectangle boundingBox, Array<Rectangle> tiles) {
 		boundingBox.y += velocity.y;
 		for (Rectangle tile : tiles) {
@@ -252,6 +276,9 @@ public abstract class EntityBase {
 		batch.end();
 	}
 
+	/**
+	 * Dispose of any resources this entity may be using.
+	 */
 	public void dispose() {
 		this.textureAtlas.dispose();
 	}
