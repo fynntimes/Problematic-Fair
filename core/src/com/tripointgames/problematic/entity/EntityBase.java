@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.tripointgames.problematic.GameScreen;
 
 /**
- * Base class for all entities. Man
+ * Base class for all entities. 
  * 
  * @author Faizaan Datoo
  */
@@ -218,7 +218,7 @@ public abstract class EntityBase {
 
 					float tileHeight = 1f;
 					if (cell.getTile().getProperties().containsKey("quarterTile"))
-						tileHeight = 0.25f;
+						tileHeight = 0.5f;
 					rect.set(x, y, 1, tileHeight);
 					tiles.add(rect);
 				}

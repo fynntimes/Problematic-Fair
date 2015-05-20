@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="2">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="70" tileheight="70" nextobjectid="5">
+ <properties>
+  <property name="slipperiness" value="0.835"/>
+ </properties>
  <tileset firstgid="1" name="tileset" tilewidth="70" tileheight="70" spacing="2" margin="2">
   <image source="tileset.png" width="1658" height="218"/>
   <tile id="2">
@@ -8,17 +11,20 @@
    </properties>
   </tile>
  </tileset>
+ <layer name="NO WALLS" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2LENwDAIBEDPEWWC7D9gaqR0jo1BdxI16L9jDACgk7vBVHc1mx19r+w9O7+/59m0Z5Xs/PQRZeenjyg7P31E2fnpAwCAk3X543VS6e962j2zquT+pcKNAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAkOkFelg30Q==
+  </data>
+ </layer>
  <layer name="walls" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1EsKwCAMBUDP0733v1qXLeKHLKQ2zEBAXJk8tRQyq53iG6PZt/ujnGQ3V5t1O8ed85PN48RZzO7B7Lyrd3jav5rpr1/1Eekvkjl916t2yXBvT7EzJ2JkAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwbzcxsgh8
+   eJzt01sKgzAQBVC3Y6nNV/a/NeNHYQjxURBt2nPggiRxEHIdBoD+jeH5WZJLXh/st9amkrQyo54X3/tn4/6Ry23d1db3tvbi2tKPpTOpce4OOaT3Prb+x+hoz76xj716nDjrfb91eu8tAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwW2asJwf7
   </data>
  </layer>
  <objectgroup name="entities">
-  <object id="1" name="player" x="216.803" y="333.091"/>
+  <object id="1" name="player" x="97.803" y="332.091"/>
+  <object id="2" name="bottom" x="7" y="439"/>
+  <object id="3" name="key" x="5182" y="408"/>
+  <object id="4" name="end" x="5454" y="413"/>
  </objectgroup>
- <layer name="NO WALLS" width="100" height="100">
-  <data encoding="base64" compression="zlib">
-   eJzt2EsKhDAQBUDPMXgCT+D9T+bGhQzJTPx3hyp4O8XQL0HIMAAAvRkTpwefnZkOvPNUtrJ2HrGPqTFRur/S23v6V9dnOpnX/PvmXEimPu7cl7U5X3VGvudd6qC1n7tE7aOllyNd1DqoPed8xPtXPNkHAACx9HSX14sI93Ctoq3nrCxzL8mwRgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHjTArrBPTU=
-  </data>
- </layer>
 </map>

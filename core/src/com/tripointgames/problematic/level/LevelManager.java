@@ -54,9 +54,6 @@ public class LevelManager {
 				"maps/level" + id + ".tmx");
 		levels.add(new Level("level" + id));
 
-		getLevel(id + 1).levelData.setUnlocked(true);
-		getLevel(id + 1).save();
-
 		return true;
 	}
 
@@ -102,7 +99,7 @@ public class LevelManager {
 	 *            The level to set as current, or null if the game has exited
 	 *            the GameScreen.
 	 * @param id
-	 *            The ID of the level to set as current.
+	 *            The ID of the level to set as current. -
 	 */
 	public void setCurrentLevel(Level currentLevel, int id) {
 		this.currentLevel = currentLevel;
@@ -111,10 +108,19 @@ public class LevelManager {
 
 	/**
 	 * Change the level to the next one.
+	 * 
+	 * @return True if the incrementation was successful, or false if there are
+	 *         no more levels.
 	 */
-	public void incrementLevel() {
+	public boolean incrementLevel() {
 		this.currentLevelID++;
+		if (this.currentLevelID > levels.size) return false;
 		this.currentLevel = getLevel(currentLevelID);
+		// Unlock the next level
+		this.currentLevel.levelData.setUnlocked(true);
+		this.currentLevel.save();
+		
+		return true;
 	}
 
 	/**

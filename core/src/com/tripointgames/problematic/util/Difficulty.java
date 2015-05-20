@@ -8,12 +8,18 @@ package com.tripointgames.problematic.util;
  */
 public enum Difficulty {
 
-	SuperEasy(5), Easy(10), Medium(20), Hard(50), SuperHard(100);
+	SuperEasy(0, 5), Easy(1, 10), Medium(2, 20), Hard(3, 50), SuperHard(4, 100);
 
+	int id;
 	int maxNumberValue;
 
-	Difficulty(int maxNumberValue) {
+	Difficulty(int id, int maxNumberValue) {
+		this.id = id;
 		this.maxNumberValue = maxNumberValue;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 	
 	public int getMaxNumberValue() {

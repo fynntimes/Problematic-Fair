@@ -2,6 +2,7 @@ package com.tripointgames.problematic.util;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 /**
@@ -15,12 +16,14 @@ public class MusicManager {
 	private Music currentMusic = null;
 	private int currentId = -1;
 	private float volume = 0.1f;
-
+	
 	public MusicManager() {
 		musics = new Array<Music>();
 		registerMusic();
 		// Start the first track
 		if (currentId == -1) {
+			// Choose a random song and play it
+			currentId = MathUtils.random(musics.size) - 1;
 			getNextTrack();
 			return;
 		}
@@ -34,7 +37,7 @@ public class MusicManager {
 		musics.add(AssetManager.getInstance().getMusic("music1"));
 		musics.add(AssetManager.getInstance().getMusic("music2"));
 	}
-
+	
 	/**
 	 * Stop all playing music.
 	 */

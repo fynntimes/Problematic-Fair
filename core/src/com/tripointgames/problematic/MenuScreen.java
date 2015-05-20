@@ -83,8 +83,9 @@ public class MenuScreen implements Screen {
 		optionsButton.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				System.out.println("To the options screen");
 				AssetManager.getInstance().getSound("button-click").play();
+				dispose();
+				gameInstance.setScreen(new OptionsScreen(gameInstance));
 			}
 		});
 
@@ -103,6 +104,7 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				AssetManager.getInstance().getSound("button-click").play();
+				dispose();
 				gameInstance.setScreen(new LevelScreen(gameInstance));
 			}
 		});
@@ -123,7 +125,8 @@ public class MenuScreen implements Screen {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				AssetManager.getInstance().getSound("button-click").play();
-				gameInstance.setScreen(new MathScreen(gameInstance));
+				dispose();
+				gameInstance.setScreen(new HelpScreen(gameInstance));
 			}
 		});
 

@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.tripointgames.problematic.GameScreen;
+import com.tripointgames.problematic.LevelScreen;
 import com.tripointgames.problematic.Main;
 import com.tripointgames.problematic.MathScreen;
 import com.tripointgames.problematic.entity.EntityKey;
@@ -25,7 +26,6 @@ import com.tripointgames.problematic.util.AssetManager;
  * @author Faizaan Datoo
  */
 public class Level {
-
 
 	private Main gameInstance;
 	private GameScreen gameScreen;
@@ -41,15 +41,15 @@ public class Level {
 	public LevelData levelData; // Data about the level
 	private Json json; // JSON object for file writing.
 
+	private float playerSpawnX, playerSpawnY; // Player spawn location
 	private float yBottom; // The bottom of the map, for camera positioning
 	private float mapEnd; // The end of the map, for camera positioning
 
-	// TODO Make constructor local (after removal of level editor)
 	/**
 	 * This constructor is to be used only in the LevelManager class. GameScreen
 	 * should use the prepare method to pass in a camera and a player object.
 	 */
-	public Level(String levelAssetKey) {
+	protected Level(String levelAssetKey) {
 		this.levelAssetKey = levelAssetKey;
 		this.map = AssetManager.getInstance().getMap(levelAssetKey);
 
@@ -72,8 +72,8 @@ public class Level {
 		this.gameScreen = gameScreen;
 
 		loadObjects();
-		// Set player position to the spawn point
 
+		// Set player position to the spawn point
 		player.position.set(playerSpawnX, playerSpawnY);
 		camera.position.x = player.position.x;
 		camera.position.y = player.position.y + 0.5f;
@@ -89,21 +89,23 @@ public class Level {
 		MapObjects entitiesObjects = entitiesLayer.getObjects();
 
 		// Get the ybottom from the map
-		// TODO This is temporary until all maps have a "bottom" object.
-		if (entitiesObjects.get("bottom") == null) this.yBottom = 93;
-		else this.yBottom = entitiesLayer
-				.get("bottom").getProperties().get("y", Float.class)
+		this.yBottom = entitiesObjects.get("bottom").getProperties()
+				.get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
 		this.camera.position.y = this.yBottom;
 
-		// Get the end of the map, which indicates where the camera should stop moving.
-		this.mapEnd = entities.get("end").getProperties().get("x", Float.class) * GameScreen.UNIT_SCALE;
+		// Get the end of the map, which indicates where the camera should stop
+		// moving.
+		this.mapEnd = entitiesObjects.get("end").getProperties()
+				.get("x", Float.class)
+				* GameScreen.UNIT_SCALE;
 
 		// Get the key location from the map.
 		this.key = new EntityKey();
 		if (entitiesObjects.get("key") == null) this.key.position = Vector2.Zero;
 		else {
-			MapProperties playerProperties = entitiesObjects.get("key").getProperties();
+			MapProperties playerProperties = entitiesObjects.get("key")
+					.getProperties();
 			float keySpawnX = playerProperties.get("x", Float.class)
 					* GameScreen.UNIT_SCALE;
 			float keySpawnY = playerProperties.get("y", Float.class)
@@ -112,16 +114,19 @@ public class Level {
 		}
 
 		// Get the player spawn position from the map
-		MapProperties playerProperties = entitiesObjects.get("player").getProperties();
-		float playerSpawnX = playerProperties.get("x", Float.class)
+		MapProperties playerProperties = entitiesObjects.get("player")
+				.getProperties();
+		this.playerSpawnX = playerProperties.get("x", Float.class)
 				* GameScreen.UNIT_SCALE;
-		float playerSpawnY = playerProperties.get("y", Float.class)
+		this.playerSpawnY = playerProperties.get("y", Float.class)
 				* GameScreen.UNIT_SCALE;
+
 	}
 
 	public void update(float delta) {
 		// If the game is frozen, don't update or this will cause glitching
 		if (delta == 0) return;
+
 		// Update the player
 		player.update(delta, this.map);
 
@@ -132,6 +137,9 @@ public class Level {
 			gameInstance.setScreen(new MathScreen(gameInstance));
 			return;
 		}
+
+		// Check if player is trying to go off the map
+		checkPlayerPosition();
 
 		// Check if the player got the key
 		checkForKeyCollision();
@@ -148,7 +156,7 @@ public class Level {
 
 		// Render the player
 		player.render(renderer.getBatch());
-		
+
 		// Render the key
 		key.render(renderer.getBatch());
 	}
@@ -176,11 +184,11 @@ public class Level {
 		return map.getProperties().get("width", Integer.class);
 	}
 
-	public int getMapEnd() {
+	public float getMapEnd() {
 		return this.mapEnd;
 	}
 
-	public int getMapBottom() {
+	public float getMapBottom() {
 		return this.yBottom;
 	}
 
@@ -188,6 +196,8 @@ public class Level {
 	 * Adjust the camera position to follow the player.
 	 */
 	private void adjustCamera() {
+		camera.position.x = player.position.x;
+
 		// Stop the camera if it goes off the map so the player does not see
 		// past the edge.
 		if (camera.position.x < 8) {
@@ -199,20 +209,33 @@ public class Level {
 			camera.position.x = this.mapEnd - stopOffset;
 		}
 
-		camera.position.x = player.position.x;
 		camera.update();
 	}
 
 	/**
-	 * Check to see if the player collided with the key, and go to the next level.
+	 * Stop player if it is trying to go off the map (so it doesn't fall off!)
+	 */
+	private void checkPlayerPosition() {
+		if (player.position.x <= 0.5f) player.position.x = 0.5f;
+
+		if (player.position.x >= mapEnd - 1) player.position.x = mapEnd - 1;
+	}
+
+	/**
+	 * Check to see if the player collided with the key, and go to the next
+	 * level.
 	 */
 	private void checkForKeyCollision() {
 		Rectangle playerRect = player.getBoundingBox();
 		Rectangle keyRect = key.getBoundingBox();
-		if(playerRect.overlaps(keyRect)) {
+		if (playerRect.overlaps(keyRect)) {
+			// Go onto the next level
 			this.gameScreen.dispose();
-			this.gameInstance.levelManager.incrementLevel();
-			this.gameInstance.setScreen(new GameScreen(gameInstance));
+			AssetManager.getInstance().getSound("correct-answer").play();
+			if (this.gameInstance.levelManager.incrementLevel() == false) {
+				// The game is finished, take them to the level screen
+				this.gameInstance.setScreen(new LevelScreen(gameInstance));
+			} else this.gameInstance.setScreen(new GameScreen(gameInstance));
 		}
 	}
 

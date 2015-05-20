@@ -25,10 +25,9 @@ import com.tripointgames.problematic.util.AssetManager;
 public class LevelScreen implements Screen {
 
 	/** Determines the amount of pages shown on the level screen. */
-	public static final int LEVEL_PACKS = 3;
+	public static final int LEVEL_PACKS = 2;
 	/** The asset keys of the level pack icons. */
-	private String[] packNames = { "grassyJourney-logo", "rockyRoad-logo",
-			"sandstorm-logo" };
+	private String[] packNames = { "grassyJourney-logo", "snowyPlains-logo"};
 
 	/** The size of each level button, in pixels. */
 	public static final int BUTTON_SIZE = 125;

@@ -1,11 +1,8 @@
 package com.tripointgames.problematic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.tripointgames.problematic.entity.EntityPlayer;
 import com.tripointgames.problematic.level.Level;
 
@@ -19,7 +16,7 @@ public class GameScreen implements Screen {
 	// Variables
 	public static final float UNIT_SCALE = 1 / 70f; // 1 unit is 16 pixels (i.e.
 													// the tile size)
-	public static final float GRAVITY = -1.5f; // Y velocity is decreased by
+	public static final float GRAVITY = -1.25f; // Y velocity is decreased by
 												// this value every frame
 
 	private Main gameInstance;
@@ -30,9 +27,6 @@ public class GameScreen implements Screen {
 	public GameGUI gui;
 
 	private PauseOverlayScreen pauseScreen;
-
-	private SpriteBatch fontBatch = new SpriteBatch();
-	private BitmapFont font = new BitmapFont();
 
 	public GameScreen(Main gameInstance) {
 		this.gameInstance = gameInstance;
@@ -50,31 +44,15 @@ public class GameScreen implements Screen {
 
 		level = gameInstance.levelManager.getCurrentLevel();
 		level.prepare(camera, player, gameInstance, this);
-
-		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
 	public void render(float delta) {
-		if (Gdx.input.isKeyPressed(Keys.BACK)) {
-			dispose();
-			gameInstance.setScreen(new LevelScreen(gameInstance));
-			return;
-		}
 		float deltaTime = Gdx.graphics.getDeltaTime();
 		if (!player.input.paused) level.update(deltaTime);
 		level.render();
 
 		gui.render();
-
-		// Debug text
-		fontBatch.begin();
-		font.draw(fontBatch,
-				"X: " + player.position.x + ", Y: " + player.position.y + ", CamX: "
-						+ camera.position.x + ", CamY: " + camera.position.y
-						+ ", MaxX: " + level.getMapWidth() + ", OnGround? "
-						+ player.onGround + ", Paused? " + player.input.paused, 0, 20);
-		fontBatch.end();
 
 		if (player.input.paused) {
 			pauseGame();

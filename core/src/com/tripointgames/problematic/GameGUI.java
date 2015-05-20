@@ -36,25 +36,23 @@ public class GameGUI {
 
 		// Initialize the images by getting them from the button sprite sheet.
 
+		Texture hudSpritesheet = new Texture(
+				Gdx.files.internal("textures/HudSprites.png"));
+		
 		// Left button
-		leftButton = new TextureRegion(new Texture(
-				Gdx.files.internal("textures/HudSprites.png")), 0, 0, GRID_WIDTH,
+		leftButton = new TextureRegion(hudSpritesheet, 0, 0, GRID_WIDTH,
 				GRID_HEIGHT);
 
 		// Right button
-		rightButton = new TextureRegion(new Texture(
-				Gdx.files.internal("textures/HudSprites.png")), GRID_WIDTH + 1, 0,
+		rightButton = new TextureRegion(hudSpritesheet, GRID_WIDTH + 1, 0,
 				GRID_WIDTH, GRID_HEIGHT);
 
 		// Tablet jump button
-		jumpButton = new TextureRegion(new Texture(
-				Gdx.files.internal("textures/HudSprites.png")), 0, GRID_HEIGHT + 1,
+		jumpButton = new TextureRegion(hudSpritesheet, 0, GRID_HEIGHT + 1,
 				GRID_WIDTH, GRID_HEIGHT);
 
 		// Pause button
-		pauseButton = new TextureRegion(new Texture(
-				Gdx.files.internal("textures/HudSprites.png")), 0, GRID_HEIGHT + 1,
-				GRID_WIDTH, GRID_HEIGHT);
+		pauseButton = new TextureRegion(new Texture(Gdx.files.internal("textures/PauseButton.png")));
 
 		// Set the positions for each button
 		leftButtonX = 0;
@@ -67,7 +65,7 @@ public class GameGUI {
 		jumpButtonY = Gdx.graphics.getHeight() - (GRID_HEIGHT * 2);
 		
 		pauseButtonX = 0;
-		pauseButtonY = Gdx.graphics.getHeight() - GRID_HEIGHT;
+		pauseButtonY = Gdx.graphics.getHeight() - 48;
 
 	}
 

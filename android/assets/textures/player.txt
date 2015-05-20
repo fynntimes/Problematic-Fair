@@ -11,28 +11,28 @@ jumping
   index: -1
 standing
   rotate: false
-  xy: 2, 112
+  xy: 64, 2
   size: 51, 110
   orig: 51, 110
   offset: 0, 0
   index: -1
 walking1
   rotate: false
-  xy: 2, 224
-  size: 56, 109
-  orig: 56, 109
+  xy: 117, 2
+  size: 57, 107
+  orig: 57, 107
   offset: 0, 0
   index: -1
 walking2
   rotate: false
-  xy: 2, 335
-  size: 54, 106
-  orig: 54, 106
+  xy: 176, 2
+  size: 64, 105
+  orig: 64, 105
   offset: 0, 0
   index: -1
 walking3
   rotate: false
-  xy: 2, 443
+  xy: 242, 2
   size: 55, 109
   orig: 55, 109
   offset: 0, 0

@@ -21,7 +21,7 @@ import com.tripointgames.problematic.util.PreferencesManager;
 public class Main extends Game {
 	public LevelManager levelManager;
 	public MusicManager musicManager;
-	
+
 	@Override
 	public void create() {
 		loadAssets();
@@ -29,10 +29,10 @@ public class Main extends Game {
 		// Load all levels into the game
 		levelManager = new LevelManager();
 		levelManager.loadLevels();
-		
+
 		// Load all background music
 		musicManager = new MusicManager();
-		
+
 		// Load the game preferences
 		try {
 			PreferencesManager.getInstance().loadPreferences();
@@ -48,7 +48,7 @@ public class Main extends Game {
 	}
 
 	private void loadAssets() {
-		// Load game sounds
+		// Load game sound effects
 		AssetManager.getInstance().registerSound("wrong-answer",
 				"sounds/wrong-answer.wav");
 		AssetManager.getInstance().registerSound("correct-answer",
@@ -63,21 +63,35 @@ public class Main extends Game {
 		AssetManager.getInstance().registerMusic("music1", "music/music1.mp3");
 		AssetManager.getInstance().registerMusic("music2", "music/music2.mp3");
 
-		// Load the UI textures
+		/*
+		 * Textures
+		 */
+		
+		// Textures for level packs
 		AssetManager.getInstance().registerTexture("grassyJourney-logo",
 				"textures/Grassy-Journey.png");
-		AssetManager.getInstance().registerTexture("rockyRoad-logo",
-				"textures/Rocky-Road.png");
-		AssetManager.getInstance().registerTexture("sandstorm-logo",
-				"textures/Sandstorm.png");
+		AssetManager.getInstance().registerTexture("snowyPlains-logo",
+				"textures/Snowy-Plains.png");
+		
+		// Textures for screens
+		AssetManager.getInstance().registerTexture("options-logo",
+				"textures/options-logo.png");
+		AssetManager.getInstance().registerTexture("helpscreen",
+				"textures/helpScreen.png");
+		
+		// Background for all menus
 		AssetManager.getInstance().registerTexture("menuBackground",
 				"textures/bg_castle.png");
+		
+		// Main menu buttons
 		AssetManager.getInstance().registerTexture("playButton", "textures/play.png");
 		AssetManager.getInstance().registerTexture("optionsButton",
 				"textures/options.png");
 		AssetManager.getInstance().registerTexture("helpButton", "textures/help.png");
 		AssetManager.getInstance().registerTexture("problematicLogo",
-				"textures/Problematic-2.png");
+				"textures/Problematic.png");
+		
+		// Background for math screen
 		AssetManager.getInstance().registerTexture("mathscreenBackground",
 				"textures/chalkboard.jpg");
 	}
